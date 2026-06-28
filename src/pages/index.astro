@@ -1,11 +1,217 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+  <!-- Background Mesh Gradient -->
+  <div class="mesh-gradient-bg"></div>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <!-- Announcement Banner -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-1 text-xs text-body shadow-vercel-sm mb-8">
+        <span class="font-mono text-xs font-semibold uppercase tracking-wider text-link">New</span>
+        <span class="h-3 w-px bg-hairline"></span>
+        <span>Version 2.0 with PDF export & QR sharing.</span>
+      </div>
+
+      <!-- Tagline -->
+      <h1 class="text-4xl font-semibold tracking-[-2.4px] text-ink sm:text-6xl max-w-3xl mx-auto leading-none">
+        Split expenses. No accounts. Instant settlement.
+      </h1>
+      
+      <!-- Subcopy -->
+      <p class="mt-6 text-lg sm:text-xl text-body max-w-2xl mx-auto leading-relaxed">
+        A Vercel-inspired bill splitter designed for developers, roommates, and travelers. 
+        Zero logins, 100% client-side, offline-first. Split travel costs or subscription fees in seconds.
+      </p>
+
+      <!-- CTA Cluster -->
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a 
+          href="/app" 
+          class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-base font-semibold text-on-primary hover:bg-primary/95 transition-colors shadow-vercel-md"
+        >
+          Start Splitting Free
+        </a>
+        <a 
+          href="#features" 
+          class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-full border border-hairline bg-canvas px-8 text-base font-semibold text-ink hover:bg-canvas-soft-2 transition-colors shadow-vercel-sm"
+        >
+          Learn More
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid Section -->
+  <section id="features" class="border-t border-hairline bg-canvas py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto">
+        <p class="font-mono text-xs font-semibold uppercase tracking-wider text-mute">Built for Developers & Power Users</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-[-1.28px] text-ink sm:text-4xl">
+          Everything you need. Done locally.
+        </h2>
+        <p class="mt-4 text-base text-body">
+          We stripped away the database, the signup forms, and the latency. You get pure utility.
+        </p>
+      </div>
+
+      <div class="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Feature 1 -->
+        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
+          <div class="font-mono text-xs text-mute mb-4">01 / SPEED</div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">No Accounts Required</h3>
+          <p class="mt-2 text-sm text-body">
+            Skip the sign-up flow. Start splitting bills instantly the second you open the app.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
+          <div class="font-mono text-xs text-mute mb-4">02 / PRIVACY</div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">100% Client-Side</h3>
+          <p class="mt-2 text-sm text-body">
+            All data is saved in your local browser storage. No servers, no tracking, completely secure.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
+          <div class="font-mono text-xs text-mute mb-4">03 / COLLABORATION</div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">URL State Sharing</h3>
+          <p class="mt-2 text-sm text-body">
+            Encode your split state inside a compressed URL param. Just copy the link and send it.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
+          <div class="font-mono text-xs text-mute mb-4">04 / VERSATILITY</div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">Dual Splitting Modes</h3>
+          <p class="mt-2 text-sm text-body">
+            Toggle between subscription mode for recurring costs or travel mode for group trips.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
+          <div class="font-mono text-xs text-mute mb-4">05 / MATHEMATICS</div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">Smart Debt Minimization</h3>
+          <p class="mt-2 text-sm text-body">
+            Our settlement algorithm computes the minimum number of payments needed to clear all debts.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
+          <div class="font-mono text-xs text-mute mb-4">06 / EXPORT</div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink">PDFs & QR Codes</h3>
+          <p class="mt-2 text-sm text-body">
+            Export a high-quality PDF report or show a QR code for mobile scanning instantly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="border-t border-hairline bg-canvas-soft py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto">
+        <p class="font-mono text-xs font-semibold uppercase tracking-wider text-mute">Simple Workflow</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-[-1.28px] text-ink sm:text-4xl">
+          Three steps to settlement.
+        </h2>
+      </div>
+
+      <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3 relative">
+        <!-- Step 1 -->
+        <div class="flex flex-col items-start p-6">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-xs text-on-primary mb-6">1</div>
+          <h3 class="text-lg font-semibold text-ink">Create Group & Add Members</h3>
+          <p class="mt-2 text-sm text-body">
+            Enter a group name, pick your currency, and add up to 30 members. No signup required.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex flex-col items-start p-6">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-xs text-on-primary mb-6">2</div>
+          <h3 class="text-lg font-semibold text-ink">Log Group Expenses</h3>
+          <p class="mt-2 text-sm text-body">
+            Add bills, titles, and amounts. Choose who paid and select which members split the expense.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex flex-col items-start p-6">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-xs text-on-primary mb-6">3</div>
+          <h3 class="text-lg font-semibold text-ink">Share & Settle Up</h3>
+          <p class="mt-2 text-sm text-body">
+            View the minimal payment matrix. Share the link, display the QR code, or export to PDF.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a 
+          href="/app" 
+          class="inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-on-primary hover:bg-primary/95 transition-colors shadow-vercel-sm"
+        >
+          Try the App Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="border-t border-hairline bg-canvas py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl divide-y divide-hairline">
+        <h2 class="text-3xl font-semibold tracking-[-1.28px] text-ink text-center mb-12">Frequently Asked Questions</h2>
+        
+        <!-- FAQ 1 -->
+        <div class="py-6">
+          <h3 class="text-base font-semibold text-ink font-sans">Where is my data stored?</h3>
+          <p class="mt-2 text-sm text-body">
+            All calculations and data exist entirely in your browser. We use local storage to save your groups. We do not use any databases or servers, keeping your financial activities private.
+          </p>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="py-6">
+          <h3 class="text-base font-semibold text-ink font-sans">How does sharing work without a backend database?</h3>
+          <p class="mt-2 text-sm text-body">
+            We compress the entire group state (members, expenses, and config) into a short base64 string using `lz-string`. We append this string as a URL query parameter. When someone opens your shared link, the app extracts, decompresses, and loads it instantly.
+          </p>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="py-6">
+          <h3 class="text-base font-semibold text-ink font-sans">Is SplitWhat really free?</h3>
+          <p class="mt-2 text-sm text-body">
+            Yes, it is 100% free. There are no premium tiers, no limits on number of groups, and absolutely no ads.
+          </p>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="py-6">
+          <h3 class="text-base font-semibold text-ink font-sans">Can I use SplitWhat offline?</h3>
+          <p class="mt-2 text-sm text-body">
+            Yes. Since the app is built on Astro and uses 100% client-side logic for parsing, compiling, QR generating, and PDF printing, it runs perfectly without an active internet connection.
+          </p>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="py-6">
+          <h3 class="text-base font-semibold text-ink font-sans">What happens if the sharing link gets too long?</h3>
+          <p class="mt-2 text-sm text-body">
+            Since the entire data is stored in the URL, a huge number of expenses will make the URL very long. We show a friendly warning if the URL exceeds 2,000 characters. To prevent this, keep your group lists under 300 expenses.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>

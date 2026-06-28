@@ -1,0 +1,1268 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="SplitWhat App — Split Expenses Instantly" description="Frontend-only bill splitter. No signup required. Perfect for trip expenses and subscription splits.">
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    
+    <!-- Top Configuration Bar (Group Name, Currency, Mode) -->
+    <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm mb-8">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3 items-end">
+        <!-- Group Name -->
+        <div>
+          <label for="group-name" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Group Name</label>
+          <input 
+            type="text" 
+            id="group-name" 
+            value="My Trip"
+            class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+            placeholder="e.g. Europe Trip 2026"
+            maxlength="100"
+          />
+        </div>
+
+        <!-- Currency & Mode Toggle Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Currency Selector -->
+          <div>
+            <label for="currency-selector" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Currency</label>
+            <select 
+              id="currency-selector" 
+              class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-mono text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+            >
+              <option value="$">USD ($)</option>
+              <option value="€">EUR (€)</option>
+              <option value="£">GBP (£)</option>
+              <option value="₹">INR (₹)</option>
+              <option value="¥">JPY (¥)</option>
+              <option value="A$">AUD (A$)</option>
+              <option value="C$">CAD (C$)</option>
+              <option value="₪">ILS (₪)</option>
+            </select>
+          </div>
+
+          <!-- Mode Toggle -->
+          <div>
+            <label class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Split Mode</label>
+            <div class="relative flex h-10 items-center justify-between rounded-md border border-hairline bg-canvas-soft-2 p-1">
+              <button 
+                type="button" 
+                id="mode-travel-btn"
+                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-ink bg-canvas shadow-vercel-sm"
+              >
+                Travel
+              </button>
+              <button 
+                type="button" 
+                id="mode-subscription-btn"
+                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-body hover:text-ink"
+              >
+                Subscription
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reset & Quick Load -->
+        <div class="flex items-center justify-end gap-3 h-10">
+          <select 
+            id="recent-splits-selector" 
+            class="hidden md:block h-10 px-3 rounded-md border border-hairline bg-canvas text-body font-sans text-xs focus:border-primary focus:ring-0 outline-none max-w-[180px] transition-colors"
+          >
+            <option value="">Load Recent Split...</option>
+          </select>
+          <button 
+            type="button" 
+            id="reset-group-btn"
+            class="inline-flex h-10 items-center justify-center rounded-md border border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-colors"
+          >
+            Reset Group
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT COLUMN: Members & Expenses -->
+      <div class="lg:col-span-7 space-y-8">
+        
+        <!-- Members List Card -->
+        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
+            <div>
+              <h2 class="text-lg font-semibold tracking-tight text-ink">Group Members</h2>
+              <p class="text-xs text-body mt-0.5">Add people who will split the bills.</p>
+            </div>
+            <span id="members-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2 py-0.5 rounded text-mute border border-hairline">
+              0 / 30
+            </span>
+          </div>
+
+          <!-- Add Member Input -->
+          <form id="add-member-form" class="flex gap-2 mb-4">
+            <div class="relative flex-grow">
+              <input 
+                type="text" 
+                id="new-member-name" 
+                class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+                placeholder="Enter name (e.g. Alex, Sam)"
+                maxlength="50"
+              />
+              <span id="member-validation-error" class="hidden absolute left-0 -bottom-5 text-[10px] text-error font-sans"></span>
+            </div>
+            <button 
+              type="submit" 
+              class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-on-primary hover:bg-primary/90 transition-colors shadow-vercel-sm"
+            >
+              Add
+            </button>
+          </form>
+
+          <!-- Members Chips Container -->
+          <div id="members-list-container" class="flex flex-wrap gap-2 mt-6 min-h-[40px] items-center text-center">
+            <!-- Dynamic Member Chips -->
+            <p id="empty-members-placeholder" class="text-sm text-mute italic py-2">No members added yet. Add at least two to split bills.</p>
+          </div>
+        </div>
+
+        <!-- Add Expense Form Card -->
+        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm relative">
+          <div class="border-b border-hairline pb-4 mb-6">
+            <h2 class="text-lg font-semibold tracking-tight text-ink">Add Expense</h2>
+            <p class="text-xs text-body mt-0.5">Enter expense item details below.</p>
+          </div>
+
+          <div id="expense-form-error-summary" class="hidden rounded-md bg-error-soft/40 border border-error-soft text-error-deep p-3 text-xs mb-4">
+            Please correct the validation errors below.
+          </div>
+
+          <form id="add-expense-form" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Title -->
+              <div>
+                <label for="expense-title" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Title</label>
+                <input 
+                  type="text" 
+                  id="expense-title" 
+                  class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+                  placeholder="e.g. Flights, Dinner"
+                  maxlength="100"
+                />
+                <span id="err-expense-title" class="hidden text-[10px] text-error mt-1"></span>
+              </div>
+
+              <!-- Category -->
+              <div>
+                <label for="expense-category" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Category</label>
+                <select 
+                  id="expense-category" 
+                  class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+                >
+                  <!-- Dynamically populated categories -->
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Amount -->
+              <div>
+                <label for="expense-amount" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Amount</label>
+                <div class="relative">
+                  <span id="expense-amount-symbol" class="absolute left-3 top-2.5 text-mute font-mono text-sm">$</span>
+                  <input 
+                    type="number" 
+                    id="expense-amount" 
+                    step="0.01" 
+                    min="0.01"
+                    class="w-full h-10 pl-8 pr-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+                    placeholder="0.00"
+                  />
+                </div>
+                <span id="err-expense-amount" class="hidden text-[10px] text-error mt-1"></span>
+              </div>
+
+              <!-- Paid By -->
+              <div>
+                <label for="expense-paid-by" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Paid By</label>
+                <select 
+                  id="expense-paid-by" 
+                  class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+                >
+                  <option value="">Choose member...</option>
+                </select>
+                <span id="err-expense-paid-by" class="hidden text-[10px] text-error mt-1"></span>
+              </div>
+            </div>
+
+            <!-- Split Among Checkboxes -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider">Split Among</span>
+                <div class="flex gap-2">
+                  <button type="button" id="split-select-all" class="text-xs text-link hover:underline">Select All</button>
+                  <span class="text-xs text-mute font-mono">•</span>
+                  <button type="button" id="split-deselect-all" class="text-xs text-link hover:underline">Deselect All</button>
+                </div>
+              </div>
+
+              <div id="split-members-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3 rounded-md border border-hairline bg-canvas-soft-2 max-h-[140px] overflow-y-auto">
+                <!-- Checkboxes populated dynamically -->
+                <p id="split-empty-placeholder" class="col-span-full text-xs text-mute italic text-center py-2">Add group members to split with.</p>
+              </div>
+              <span id="err-expense-split-among" class="hidden text-[10px] text-error mt-1"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="w-full inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-on-primary hover:bg-primary/90 transition-colors shadow-vercel-sm"
+            >
+              Add Expense
+            </button>
+          </form>
+        </div>
+
+        <!-- Expenses List Card -->
+        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+          <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
+            <div>
+              <h2 class="text-lg font-semibold tracking-tight text-ink">Logged Expenses</h2>
+              <p class="text-xs text-body mt-0.5">List of group bills.</p>
+            </div>
+            <span id="expenses-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2 py-0.5 rounded text-mute border border-hairline">
+              0 / 300
+            </span>
+          </div>
+
+          <!-- Expenses Container -->
+          <div id="expenses-list-container" class="divide-y divide-hairline max-h-[400px] overflow-y-auto pr-1">
+            <!-- Dynamic list -->
+            <p id="empty-expenses-placeholder" class="text-sm text-mute italic py-8 text-center">No expenses logged yet. Add your first expense above.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Summary & Settlements -->
+      <div class="lg:col-span-5 space-y-8">
+        
+        <!-- Summary Dashboard Card -->
+        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+          <div class="border-b border-hairline pb-4 mb-6">
+            <h2 class="text-lg font-semibold tracking-tight text-ink">Split Summary</h2>
+            <p class="text-xs text-body mt-0.5">Calculated shares and net balances.</p>
+          </div>
+
+          <!-- Total Spend -->
+          <div class="mb-6 flex items-center justify-between bg-canvas-soft-2 p-4 rounded-md border border-hairline">
+            <div>
+              <span class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider">Total Spend</span>
+              <span id="summary-total-spend" class="text-3xl font-semibold tracking-tight text-ink mt-1">$0.00</span>
+            </div>
+            <div id="top-payer-badge-container" class="hidden flex-col items-end">
+              <span class="block font-mono text-[10px] text-mute uppercase tracking-wider">Top Spender</span>
+              <span id="summary-top-payer" class="inline-flex items-center gap-1 mt-1 rounded-full bg-link-bg-soft px-2 py-0.5 text-xs font-medium text-link">
+                --
+              </span>
+            </div>
+          </div>
+
+          <!-- Members Grid Breakdown -->
+          <div>
+            <h3 class="font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-3">Balance sheet</h3>
+            
+            <div class="border border-hairline rounded-md overflow-hidden bg-canvas">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-canvas-soft-2 border-b border-hairline">
+                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute">Member</th>
+                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute text-right">Paid</th>
+                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute text-right">Owed</th>
+                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute text-right">Net</th>
+                  </tr>
+                </thead>
+                <tbody id="summary-table-body" class="divide-y divide-hairline">
+                  <!-- Dynamic Rows -->
+                  <tr>
+                    <td colspan="4" class="p-4 text-xs text-mute italic text-center">No calculations available.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settlements Card -->
+        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+          <div class="border-b border-hairline pb-4 mb-4">
+            <h2 class="text-lg font-semibold tracking-tight text-ink">Settlement Path</h2>
+            <p class="text-xs text-body mt-0.5">Optimized list of debts to clear.</p>
+          </div>
+
+          <div id="settlements-list-container" class="space-y-3 min-h-[50px]">
+            <!-- Dynamic Settlement Cards -->
+            <p id="empty-settlements-placeholder" class="text-sm text-mute italic py-6 text-center">Everyone is settled. No transfers needed!</p>
+          </div>
+        </div>
+
+        <!-- Share Actions & Exports Card -->
+        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+          <div class="border-b border-hairline pb-4 mb-6">
+            <h2 class="text-lg font-semibold tracking-tight text-ink">Share & Export</h2>
+            <p class="text-xs text-body mt-0.5">Share this split or export data client-side.</p>
+          </div>
+
+          <!-- URL Alert Warning -->
+          <div id="url-limit-warning" class="hidden rounded-md bg-warning-soft border border-warning text-warning-deep p-3 text-xs mb-4">
+            <strong>Warning:</strong> The link length exceeds safe limits (~2000 chars). It may not share correctly on some apps. Try keeping your expenses below 200 items.
+          </div>
+
+          <!-- Share Link Box -->
+          <div class="space-y-3">
+            <div>
+              <label class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Shareable Link</label>
+              <div class="flex gap-2">
+                <input 
+                  type="text" 
+                  id="share-link-input" 
+                  readonly 
+                  class="flex-grow h-10 px-3 rounded-md border border-hairline bg-canvas-soft-2 text-mute font-sans text-xs focus:ring-0 outline-none"
+                  value=""
+                />
+                <button 
+                  type="button" 
+                  id="copy-link-btn" 
+                  class="inline-flex h-10 w-24 items-center justify-center rounded-md bg-primary text-xs font-semibold text-on-primary hover:bg-primary/90 transition-colors shadow-vercel-sm"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <!-- Share WhatsApp -->
+            <a 
+              href="#" 
+              id="whatsapp-share-btn"
+              target="_blank"
+              class="w-full inline-flex h-10 items-center justify-center rounded-md border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-colors shadow-vercel-sm gap-2"
+            >
+              <!-- WhatsApp green color replaced with vercel ink -->
+              <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.115-2.905-6.99C16.559 1.875 14.09 .843 11.453.843c-5.441 0-9.865 4.422-9.869 9.866-.001 1.77.464 3.498 1.348 5.016L1.879 21.8l6.32-1.656-.552.31z"></path>
+              </svg>
+              Share via WhatsApp
+            </a>
+
+            <!-- Export PDF Button -->
+            <button 
+              type="button" 
+              id="export-pdf-btn"
+              class="w-full inline-flex h-10 items-center justify-center rounded-md border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-colors shadow-vercel-sm gap-2"
+            >
+              <!-- PDF Icon -->
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Export Summary PDF
+            </button>
+          </div>
+
+          <!-- QR Code Area -->
+          <div class="mt-6 flex flex-col items-center justify-center border border-hairline rounded-md bg-canvas-soft p-4">
+            <span class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-3">Scan to Settle Up</span>
+            <div class="bg-white p-2 border border-hairline rounded-md shadow-vercel-sm">
+              <canvas id="share-qr-canvas" class="h-[140px] w-[140px]"></canvas>
+            </div>
+            <p class="text-[10px] text-mute mt-2.5 text-center font-mono">Any smartphone can scan this QR to load the group.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+</Layout>
+
+<script>
+  // Dynamic typescript code bundled by Vite
+  import type { GroupState, Member, Expense, MemberSummary, Debt } from '../lib/types';
+  import { calculateSplit } from '../lib/calc';
+  import { 
+    saveCurrentGroup, 
+    loadCurrentGroup, 
+    loadRecents, 
+    saveToRecents, 
+    clearCurrentGroup 
+  } from '../lib/storage';
+  import { 
+    encodeStateToUrl, 
+    decodeStateFromUrl, 
+    getWhatsAppShareUrl, 
+    isUrlLengthWarning 
+  } from '../lib/share';
+  import { 
+    validateMemberName, 
+    validateExpenseData, 
+    LIMITS 
+  } from '../lib/validate';
+  import QRCode from 'qrcode';
+  import { jsPDF } from 'jspdf';
+
+  // Constants
+  const TRAVEL_CATEGORIES = ['flight', 'hotel', 'food', 'transport', 'activity', 'other'];
+  const SUBSCRIPTION_CATEGORIES = ['streaming', 'music', 'software', 'gaming', 'other'];
+
+  // Global State
+  let state: GroupState = {
+    id: Math.random().toString(36).substring(2, 9),
+    name: 'My Trip',
+    currency: '$',
+    members: [],
+    expenses: [],
+    mode: 'travel',
+  };
+
+  // DOM Elements cache
+  const elements = {
+    groupName: document.getElementById('group-name') as HTMLInputElement,
+    currencySelector: document.getElementById('currency-selector') as HTMLSelectElement,
+    modeTravelBtn: document.getElementById('mode-travel-btn') as HTMLButtonElement,
+    modeSubscriptionBtn: document.getElementById('mode-subscription-btn') as HTMLButtonElement,
+    recentSplitsSelector: document.getElementById('recent-splits-selector') as HTMLSelectElement,
+    resetGroupBtn: document.getElementById('reset-group-btn') as HTMLButtonElement,
+    
+    membersCountBadge: document.getElementById('members-count-badge') as HTMLSpanElement,
+    addMemberForm: document.getElementById('add-member-form') as HTMLFormElement,
+    newMemberName: document.getElementById('new-member-name') as HTMLInputElement,
+    memberValidationError: document.getElementById('member-validation-error') as HTMLSpanElement,
+    membersListContainer: document.getElementById('members-list-container') as HTMLDivElement,
+    emptyMembersPlaceholder: document.getElementById('empty-members-placeholder') as HTMLParagraphElement,
+    
+    expenseFormErrorSummary: document.getElementById('expense-form-error-summary') as HTMLDivElement,
+    addExpenseForm: document.getElementById('add-expense-form') as HTMLFormElement,
+    expenseTitle: document.getElementById('expense-title') as HTMLInputElement,
+    expenseCategory: document.getElementById('expense-category') as HTMLSelectElement,
+    expenseAmountSymbol: document.getElementById('expense-amount-symbol') as HTMLSpanElement,
+    expenseAmount: document.getElementById('expense-amount') as HTMLInputElement,
+    expensePaidBy: document.getElementById('expense-paid-by') as HTMLSelectElement,
+    splitMembersCheckboxes: document.getElementById('split-members-checkboxes') as HTMLDivElement,
+    splitSelectAll: document.getElementById('split-select-all') as HTMLButtonElement,
+    splitDeselectAll: document.getElementById('split-deselect-all') as HTMLButtonElement,
+    
+    errExpenseTitle: document.getElementById('err-expense-title') as HTMLSpanElement,
+    errExpenseAmount: document.getElementById('err-expense-amount') as HTMLSpanElement,
+    errExpensePaidBy: document.getElementById('err-expense-paid-by') as HTMLSpanElement,
+    errExpenseSplitAmong: document.getElementById('err-expense-split-among') as HTMLSpanElement,
+    
+    expensesCountBadge: document.getElementById('expenses-count-badge') as HTMLSpanElement,
+    expensesListContainer: document.getElementById('expenses-list-container') as HTMLDivElement,
+    emptyExpensesPlaceholder: document.getElementById('empty-expenses-placeholder') as HTMLParagraphElement,
+    
+    summaryTotalSpend: document.getElementById('summary-total-spend') as HTMLSpanElement,
+    topPayerBadgeContainer: document.getElementById('top-payer-badge-container') as HTMLDivElement,
+    summaryTopPayer: document.getElementById('summary-top-payer') as HTMLSpanElement,
+    summaryTableBody: document.getElementById('summary-table-body') as HTMLTableSectionElement,
+    
+    settlementsListContainer: document.getElementById('settlements-list-container') as HTMLDivElement,
+    emptySettlementsPlaceholder: document.getElementById('empty-settlements-placeholder') as HTMLParagraphElement,
+    
+    urlLimitWarning: document.getElementById('url-limit-warning') as HTMLDivElement,
+    shareLinkInput: document.getElementById('share-link-input') as HTMLInputElement,
+    copyLinkBtn: document.getElementById('copy-link-btn') as HTMLButtonElement,
+    whatsappShareBtn: document.getElementById('whatsapp-share-btn') as HTMLAnchorElement,
+    exportPdfBtn: document.getElementById('export-pdf-btn') as HTMLButtonElement,
+    shareQrCanvas: document.getElementById('share-qr-canvas') as HTMLCanvasElement,
+    toastContainer: document.getElementById('toast-container') as HTMLDivElement,
+  };
+
+  // Toast Functionality
+  function showToast(message: string, type: 'info' | 'error' = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `pointer-events-auto flex items-center justify-between rounded-md bg-canvas border ${type === 'error' ? 'border-error text-error-deep' : 'border-hairline text-ink'} px-4 py-3 shadow-vercel-lg min-w-[280px] transition-all duration-300 opacity-0 translate-y-2`;
+    toast.innerHTML = `
+      <span class="text-xs font-medium">${message}</span>
+      <button class="text-mute hover:text-ink text-xs font-mono ml-4" onclick="this.parentElement.remove()">×</button>
+    `;
+    elements.toastContainer.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+    }, 10);
+    
+    // Auto dismiss
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', 'translate-y-2');
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  // Load state and run updates
+  function init() {
+    // 1. Try URL parameters first
+    const urlState = decodeStateFromUrl(window.location.href);
+    
+    if (urlState) {
+      state = urlState;
+      saveCurrentGroup(state);
+      showToast('Loaded group from share link.');
+      // Remove query parameters to keep address bar tidy
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      // 2. Try localStorage
+      const localState = loadCurrentGroup();
+      if (localState) {
+        state = localState;
+      } else {
+        // Default seed state
+        state = {
+          id: Math.random().toString(36).substring(2, 9),
+          name: 'My Trip',
+          currency: '$',
+          members: [
+            { id: 'm1', name: 'Alex' },
+            { id: 'm2', name: 'Sam' },
+            { id: 'm3', name: 'Jo' }
+          ],
+          expenses: [],
+          mode: 'travel',
+        };
+        saveCurrentGroup(state);
+      }
+    }
+
+    // Hydrate form and controls
+    elements.groupName.value = state.name;
+    elements.currencySelector.value = state.currency;
+    elements.expenseAmountSymbol.textContent = state.currency;
+    updateModeUI(state.mode);
+    populateCategories();
+    populateRecentsDropdown();
+    
+    // Initial Render
+    renderAll();
+  }
+
+  function populateRecentsDropdown() {
+    const recents = loadRecents();
+    // Reset but keep first option
+    elements.recentSplitsSelector.innerHTML = '<option value="">Load Recent Split...</option>';
+    
+    if (recents.length === 0) {
+      elements.recentSplitsSelector.classList.add('hidden');
+      return;
+    }
+    
+    elements.recentSplitsSelector.classList.remove('hidden');
+    
+    for (const r of recents) {
+      const option = document.createElement('option');
+      option.value = r.id;
+      option.textContent = `${r.name || 'Untitled'} (${r.members.length} members)`;
+      elements.recentSplitsSelector.appendChild(option);
+    }
+  }
+
+  function updateModeUI(mode: 'travel' | 'subscription') {
+    state.mode = mode;
+    if (mode === 'travel') {
+      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-ink bg-canvas shadow-vercel-sm";
+      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-body hover:text-ink";
+    } else {
+      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-ink bg-canvas shadow-vercel-sm";
+      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-body hover:text-ink";
+    }
+  }
+
+  function populateCategories() {
+    const categories = state.mode === 'travel' ? TRAVEL_CATEGORIES : SUBSCRIPTION_CATEGORIES;
+    elements.expenseCategory.innerHTML = '';
+    for (const category of categories) {
+      const opt = document.createElement('option');
+      opt.value = category;
+      opt.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+      elements.expenseCategory.appendChild(opt);
+    }
+  }
+
+  // Render Functions
+  function renderAll() {
+    renderMembers();
+    renderExpenses();
+    renderCalculations();
+    renderShareActions();
+  }
+
+  function renderMembers() {
+    // Member count
+    elements.membersCountBadge.textContent = `${state.members.length} / ${LIMITS.MAX_MEMBERS}`;
+
+    // Clear chips
+    elements.membersListContainer.innerHTML = '';
+    
+    if (state.members.length === 0) {
+      elements.membersListContainer.appendChild(elements.emptyMembersPlaceholder);
+    } else {
+      for (const m of state.members) {
+        const chip = document.createElement('div');
+        chip.className = 'inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-3 py-1 text-sm text-ink shadow-vercel-sm animate-fade-in';
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = m.name;
+        chip.appendChild(nameSpan);
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'text-mute hover:text-error transition-colors ml-1 font-semibold text-xs';
+        removeBtn.textContent = '×';
+        removeBtn.setAttribute('aria-label', `Remove ${m.name}`);
+        removeBtn.addEventListener('click', () => removeMember(m.id));
+        chip.appendChild(removeBtn);
+        
+        elements.membersListContainer.appendChild(chip);
+      }
+    }
+
+    // Refresh inputs depending on members
+    updatePaidByDropdown();
+    updateSplitAmongCheckboxes();
+  }
+
+  function updatePaidByDropdown() {
+    const currentValue = elements.expensePaidBy.value;
+    elements.expensePaidBy.innerHTML = '<option value="">Choose member...</option>';
+    
+    for (const m of state.members) {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.name;
+      elements.expensePaidBy.appendChild(opt);
+    }
+    
+    // Retain selected paidBy if they still exist
+    if (state.members.some(m => m.id === currentValue)) {
+      elements.expensePaidBy.value = currentValue;
+    }
+  }
+
+  function updateSplitAmongCheckboxes() {
+    const checkedValues = new Set<string>();
+    const checkBoxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
+    checkBoxes.forEach((cb: any) => {
+      if (cb.checked) checkedValues.add(cb.value);
+    });
+
+    elements.splitMembersCheckboxes.innerHTML = '';
+
+    if (state.members.length === 0) {
+      elements.splitMembersCheckboxes.appendChild(elements.splitEmptyPlaceholder);
+      return;
+    }
+
+    for (const m of state.members) {
+      const label = document.createElement('label');
+      label.className = 'flex items-center gap-2 text-xs text-ink cursor-pointer hover:bg-canvas p-1 rounded transition-colors';
+      
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = m.id;
+      cb.name = 'split-member';
+      // Default to checked if it was checked before, or if it's a fresh render
+      cb.checked = checkedValues.size === 0 ? true : checkedValues.has(m.id);
+      cb.className = 'rounded border-hairline-strong text-primary focus:ring-primary h-3.5 w-3.5';
+      
+      const span = document.createElement('span');
+      span.textContent = m.name;
+      
+      label.appendChild(cb);
+      label.appendChild(span);
+      elements.splitMembersCheckboxes.appendChild(label);
+    }
+  }
+
+  function renderExpenses() {
+    elements.expensesCountBadge.textContent = `${state.expenses.length} / ${LIMITS.MAX_EXPENSES}`;
+    
+    elements.expensesListContainer.innerHTML = '';
+    
+    if (state.expenses.length === 0) {
+      elements.expensesListContainer.appendChild(elements.emptyExpensesPlaceholder);
+      return;
+    }
+
+    // Sort expenses in reverse chronological (newest first)
+    const sortedExpenses = [...state.expenses].reverse();
+
+    for (const exp of sortedExpenses) {
+      const payerName = state.members.find(m => m.id === exp.paidBy)?.name || 'Deleted Member';
+      
+      const div = document.createElement('div');
+      div.className = 'py-4 flex items-center justify-between gap-4 border-b border-hairline last:border-b-0';
+      
+      // Left Part: Title & Details
+      const leftPart = document.createElement('div');
+      leftPart.className = 'flex flex-col min-w-0';
+      
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'text-sm font-medium text-ink truncate max-w-[200px] sm:max-w-[300px]';
+      titleSpan.textContent = exp.title;
+      leftPart.appendChild(titleSpan);
+      
+      const descDiv = document.createElement('div');
+      descDiv.className = 'flex flex-wrap items-center gap-1.5 text-xs text-mute mt-1';
+      
+      const catBadge = document.createElement('span');
+      catBadge.className = 'inline-flex items-center rounded-full bg-canvas-soft border border-hairline px-1.5 py-0.5 text-[10px] font-mono capitalize';
+      catBadge.textContent = exp.category;
+      
+      const detailsText = document.createElement('span');
+      detailsText.textContent = `Paid by ${payerName} • Split with ${exp.splitAmong.length} people`;
+      
+      descDiv.appendChild(catBadge);
+      descDiv.appendChild(detailsText);
+      leftPart.appendChild(descDiv);
+      
+      // Right Part: Amount & Delete Button
+      const rightPart = document.createElement('div');
+      rightPart.className = 'flex items-center gap-4 flex-shrink-0';
+      
+      const amountSpan = document.createElement('span');
+      amountSpan.className = 'text-sm font-semibold text-ink font-mono';
+      amountSpan.textContent = `${state.currency}${exp.amount.toFixed(2)}`;
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'text-mute hover:text-error transition-colors p-1.5 rounded-full hover:bg-error-soft/30';
+      deleteBtn.innerHTML = `
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+      `;
+      deleteBtn.setAttribute('aria-label', `Delete expense ${exp.title}`);
+      deleteBtn.addEventListener('click', () => removeExpense(exp.id));
+      
+      rightPart.appendChild(amountSpan);
+      rightPart.appendChild(deleteBtn);
+      
+      div.appendChild(leftPart);
+      div.appendChild(rightPart);
+      elements.expensesListContainer.appendChild(div);
+    }
+  }
+
+  function renderCalculations() {
+    const summary = calculateSplit(state);
+    
+    // Total spend
+    elements.summaryTotalSpend.textContent = `${state.currency}${summary.totalSpend.toFixed(2)}`;
+    
+    // Find top payer
+    let maxPaid = 0;
+    let topPayerId = '';
+    
+    Object.values(summary.memberSummaries).forEach((s) => {
+      if (s.paid > maxPaid) {
+        maxPaid = s.paid;
+        topPayerId = s.memberId;
+      }
+    });
+    
+    if (topPayerId && maxPaid > 0) {
+      const topPayerName = state.members.find(m => m.id === topPayerId)?.name || '';
+      elements.summaryTopPayer.textContent = topPayerName;
+      elements.topPayerBadgeContainer.classList.remove('hidden');
+      elements.topPayerBadgeContainer.classList.add('flex');
+    } else {
+      elements.topPayerBadgeContainer.classList.add('hidden');
+      elements.topPayerBadgeContainer.classList.remove('flex');
+    }
+
+    // Render Table
+    elements.summaryTableBody.innerHTML = '';
+    
+    if (state.members.length === 0) {
+      elements.summaryTableBody.innerHTML = `
+        <tr>
+          <td colspan="4" class="p-4 text-xs text-mute italic text-center">No group members. Add members to see calculations.</td>
+        </tr>
+      `;
+    } else {
+      for (const m of state.members) {
+        const ms = summary.memberSummaries[m.id] || { paid: 0, owed: 0, net: 0 };
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-hairline hover:bg-canvas-soft-2 transition-colors';
+        
+        const nameTd = document.createElement('td');
+        nameTd.className = 'p-3 text-sm text-ink font-medium';
+        nameTd.textContent = m.name;
+        
+        const paidTd = document.createElement('td');
+        paidTd.className = 'p-3 text-sm text-body text-right font-mono';
+        paidTd.textContent = `${state.currency}${ms.paid.toFixed(2)}`;
+        
+        const owedTd = document.createElement('td');
+        owedTd.className = 'p-3 text-sm text-body text-right font-mono';
+        owedTd.textContent = `${state.currency}${ms.owed.toFixed(2)}`;
+        
+        const netTd = document.createElement('td');
+        netTd.className = 'p-3 text-sm text-right font-mono font-semibold';
+        
+        if (ms.net > 0.01) {
+          netTd.className += ' text-link'; // Positive balance
+          netTd.textContent = `+${state.currency}${ms.net.toFixed(2)}`;
+        } else if (ms.net < -0.01) {
+          netTd.className += ' text-error-deep'; // Negative balance
+          netTd.textContent = `-${state.currency}${Math.abs(ms.net).toFixed(2)}`;
+        } else {
+          netTd.className += ' text-mute'; // Settled balance
+          netTd.textContent = `${state.currency}0.00`;
+        }
+        
+        tr.appendChild(nameTd);
+        tr.appendChild(paidTd);
+        tr.appendChild(owedTd);
+        tr.appendChild(netTd);
+        elements.summaryTableBody.appendChild(tr);
+      }
+    }
+
+    // Render Settlements
+    elements.settlementsListContainer.innerHTML = '';
+    
+    if (summary.settlements.length === 0) {
+      elements.settlementsListContainer.appendChild(elements.emptySettlementsPlaceholder);
+    } else {
+      for (const item of summary.settlements) {
+        const fromName = state.members.find(m => m.id === item.from)?.name || 'Deleted Member';
+        const toName = state.members.find(m => m.id === item.to)?.name || 'Deleted Member';
+        
+        const card = document.createElement('div');
+        card.className = 'rounded-md border border-hairline bg-canvas p-3 shadow-vercel-sm flex items-center justify-between gap-4';
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'text-xs text-ink flex items-center gap-1.5 flex-wrap';
+        
+        const fromSpan = document.createElement('span');
+        fromSpan.className = 'font-semibold';
+        fromSpan.textContent = fromName;
+        
+        const textSpan = document.createElement('span');
+        textSpan.className = 'text-mute';
+        textSpan.textContent = 'owes';
+        
+        const toSpan = document.createElement('span');
+        toSpan.className = 'font-semibold';
+        toSpan.textContent = toName;
+        
+        infoDiv.appendChild(fromSpan);
+        infoDiv.appendChild(textSpan);
+        infoDiv.appendChild(toSpan);
+        
+        const amountDiv = document.createElement('div');
+        amountDiv.className = 'text-sm font-bold text-link font-mono';
+        amountDiv.textContent = `${state.currency}${item.amount.toFixed(2)}`;
+        
+        card.appendChild(infoDiv);
+        card.appendChild(amountDiv);
+        elements.settlementsListContainer.appendChild(card);
+      }
+    }
+  }
+
+  function renderShareActions() {
+    const url = encodeStateToUrl(state);
+    
+    // Set text input value
+    elements.shareLinkInput.value = url;
+    
+    // Setup WhatsApp button url
+    elements.whatsappShareBtn.href = getWhatsAppShareUrl(url, state.name);
+
+    // URL limit warning check
+    if (isUrlLengthWarning(url)) {
+      elements.urlLimitWarning.classList.remove('hidden');
+    } else {
+      elements.urlLimitWarning.classList.add('hidden');
+    }
+
+    // QR Code rendering
+    try {
+      QRCode.toCanvas(elements.shareQrCanvas, url, {
+        width: 140,
+        margin: 1,
+        color: {
+          dark: '#171717',
+          light: '#ffffff'
+        }
+      }, (err) => {
+        if (err) console.error('Failed generating QR code:', err);
+      });
+    } catch (e) {
+      console.error('QR code render crash guard:', e);
+    }
+  }
+
+  // Mutator Actions
+  function addMember(name: string) {
+    const err = validateMemberName(name, state.members);
+    if (err) {
+      elements.memberValidationError.textContent = err;
+      elements.memberValidationError.classList.remove('hidden');
+      return;
+    }
+
+    elements.memberValidationError.classList.add('hidden');
+    elements.newMemberName.value = '';
+
+    const newM: Member = {
+      id: 'm_' + Math.random().toString(36).substring(2, 9),
+      name: name.trim()
+    };
+
+    state.members.push(newM);
+    saveCurrentGroup(state);
+    populateRecentsDropdown();
+    renderAll();
+    showToast(`Added member "${newM.name}".`);
+  }
+
+  function removeMember(id: string) {
+    const member = state.members.find(m => m.id === id);
+    if (!member) return;
+
+    // Filter members
+    state.members = state.members.filter(m => m.id !== id);
+
+    // Filter payments - remove deleted member from splitAmong of all expenses.
+    // If expense.paidBy was deleted member, we leave it (will show as Deleted Member) or delete the expense?
+    // Let's filter expenses: if paidBy is deleted, delete the expense. If splitAmong contained deleted member, remove them from splitAmong list.
+    state.expenses = state.expenses.map(e => {
+      const cleanSplit = e.splitAmong.filter(mId => mId !== id);
+      return {
+        ...e,
+        splitAmong: cleanSplit
+      };
+    }).filter(e => e.paidBy !== id && e.splitAmong.length > 0);
+
+    saveCurrentGroup(state);
+    populateRecentsDropdown();
+    renderAll();
+    showToast(`Removed member "${member.name}".`);
+  }
+
+  function removeExpense(id: string) {
+    const exp = state.expenses.find(e => e.id === id);
+    if (!exp) return;
+    
+    state.expenses = state.expenses.filter(e => e.id !== id);
+    saveCurrentGroup(state);
+    populateRecentsDropdown();
+    renderAll();
+    showToast(`Deleted expense "${exp.title}".`);
+  }
+
+  // Event Bindings
+  elements.groupName.addEventListener('input', () => {
+    state.name = elements.groupName.value.trim() || 'Untitled Split';
+    saveCurrentGroup(state);
+    populateRecentsDropdown();
+    renderShareActions();
+  });
+
+  elements.currencySelector.addEventListener('change', () => {
+    state.currency = elements.currencySelector.value;
+    elements.expenseAmountSymbol.textContent = state.currency;
+    saveCurrentGroup(state);
+    renderAll();
+  });
+
+  elements.modeTravelBtn.addEventListener('click', () => {
+    if (state.mode === 'travel') return;
+    updateModeUI('travel');
+    populateCategories();
+    saveCurrentGroup(state);
+    renderAll();
+  });
+
+  elements.modeSubscriptionBtn.addEventListener('click', () => {
+    if (state.mode === 'subscription') return;
+    updateModeUI('subscription');
+    populateCategories();
+    saveCurrentGroup(state);
+    renderAll();
+  });
+
+  elements.recentSplitsSelector.addEventListener('change', () => {
+    const selectedId = elements.recentSplitsSelector.value;
+    if (!selectedId) return;
+
+    const recents = loadRecents();
+    const found = recents.find(r => r.id === selectedId);
+    if (found) {
+      state = found;
+      // Update form configurations
+      elements.groupName.value = state.name;
+      elements.currencySelector.value = state.currency;
+      elements.expenseAmountSymbol.textContent = state.currency;
+      updateModeUI(state.mode);
+      populateCategories();
+      
+      saveCurrentGroup(state);
+      renderAll();
+      showToast(`Loaded split "${state.name}".`);
+    }
+  });
+
+  elements.resetGroupBtn.addEventListener('click', () => {
+    if (!confirm('Are you sure you want to completely reset this group split? All current expenses and members will be cleared.')) {
+      return;
+    }
+
+    state = {
+      id: Math.random().toString(36).substring(2, 9),
+      name: 'My Trip',
+      currency: '$',
+      members: [],
+      expenses: [],
+      mode: 'travel',
+    };
+    
+    elements.groupName.value = state.name;
+    elements.currencySelector.value = state.currency;
+    elements.expenseAmountSymbol.textContent = state.currency;
+    updateModeUI(state.mode);
+    populateCategories();
+    
+    saveCurrentGroup(state);
+    renderAll();
+    showToast('Group reset successfully.');
+  });
+
+  // Add Member
+  elements.addMemberForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = elements.newMemberName.value;
+    addMember(val);
+  });
+
+  // Select/Deselect checkboxes
+  elements.splitSelectAll.addEventListener('click', () => {
+    const checkboxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((cb: any) => cb.checked = true);
+  });
+
+  elements.splitDeselectAll.addEventListener('click', () => {
+    const checkboxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((cb: any) => cb.checked = false);
+  });
+
+  // Add Expense Form Validation and Save
+  elements.addExpenseForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const title = elements.expenseTitle.value;
+    const category = elements.expenseCategory.value;
+    const amount = parseFloat(elements.expenseAmount.value);
+    const paidBy = elements.expensePaidBy.value;
+    
+    const splitAmong: string[] = [];
+    const checkBoxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
+    checkBoxes.forEach((cb: any) => {
+      if (cb.checked) splitAmong.push(cb.value);
+    });
+
+    // Run validations
+    const errors = validateExpenseData(title, amount, paidBy, splitAmong, state.expenses.length);
+
+    // Clear previous errors
+    elements.errExpenseTitle.classList.add('hidden');
+    elements.errExpenseAmount.classList.add('hidden');
+    elements.errExpensePaidBy.classList.add('hidden');
+    elements.errExpenseSplitAmong.classList.add('hidden');
+    elements.expenseFormErrorSummary.classList.add('hidden');
+
+    if (errors) {
+      elements.expenseFormErrorSummary.classList.remove('hidden');
+      if (errors.title) {
+        elements.errExpenseTitle.textContent = errors.title;
+        elements.errExpenseTitle.classList.remove('hidden');
+      }
+      if (errors.amount) {
+        elements.errExpenseAmount.textContent = errors.amount;
+        elements.errExpenseAmount.classList.remove('hidden');
+      }
+      if (errors.paidBy) {
+        elements.errExpensePaidBy.textContent = errors.paidBy;
+        elements.errExpensePaidBy.classList.remove('hidden');
+      }
+      if (errors.splitAmong) {
+        elements.errExpenseSplitAmong.textContent = errors.splitAmong;
+        elements.errExpenseSplitAmong.classList.remove('hidden');
+      }
+      if (errors.general) {
+        elements.expenseFormErrorSummary.textContent = errors.general;
+      }
+      return;
+    }
+
+    // Save Expense
+    const newExpense: Expense = {
+      id: 'e_' + Math.random().toString(36).substring(2, 9),
+      title: title.trim(),
+      category,
+      amount,
+      paidBy,
+      splitAmong
+    };
+
+    state.expenses.push(newExpense);
+    saveCurrentGroup(state);
+    populateRecentsDropdown();
+    
+    // Reset Form
+    elements.expenseTitle.value = '';
+    elements.expenseAmount.value = '';
+    // Retain paidBy and checkboxes to make logging multiple expenses easier
+    
+    renderAll();
+    showToast(`Logged expense "${newExpense.title}".`);
+  });
+
+  // Copy shareable link
+  elements.copyLinkBtn.addEventListener('click', () => {
+    const url = elements.shareLinkInput.value;
+    navigator.clipboard.writeText(url).then(() => {
+      elements.copyLinkBtn.textContent = 'Copied!';
+      showToast('Link copied to clipboard.');
+      setTimeout(() => {
+        elements.copyLinkBtn.textContent = 'Copy';
+      }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy to clipboard:', err);
+      showToast('Failed to copy link.', 'error');
+    });
+  });
+
+  // PDF Export Generation
+  elements.exportPdfBtn.addEventListener('click', () => {
+    try {
+      if (state.members.length === 0) {
+        showToast('Add members before exporting PDF.', 'error');
+        return;
+      }
+
+      const summary = calculateSplit(state);
+      const doc = new jsPDF();
+      
+      // Theme settings (Gray & Black)
+      const primaryColor = [23, 23, 23];
+      const grayColor = [136, 136, 136];
+      const lightLineColor = 230;
+
+      // Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      doc.text('SplitWhat Expense Summary', 20, 20);
+
+      // Meta Info
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+      doc.text(`Group: ${state.name}`, 20, 30);
+      doc.text(`Date: ${new Date().toLocaleDateString()} • Mode: ${state.mode === 'travel' ? 'Travel' : 'Subscription'}`, 20, 35);
+      doc.text(`Total Spend: ${state.currency}${summary.totalSpend.toFixed(2)}`, 20, 40);
+
+      // Divider Line
+      doc.setDrawColor(lightLineColor);
+      doc.line(20, 45, 190, 45);
+
+      // Table Header: Balance Sheet
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      doc.text('Balance Sheet', 20, 55);
+
+      doc.setFontSize(10);
+      doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+      doc.text('Member', 20, 65);
+      doc.text('Paid', 70, 65, { align: 'right' });
+      doc.text('Owed', 110, 65, { align: 'right' });
+      doc.text('Net Balance', 150, 65, { align: 'right' });
+      doc.line(20, 67, 190, 67);
+
+      // Table Body
+      let yOffset = 75;
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+
+      for (const m of state.members) {
+        const ms = summary.memberSummaries[m.id] || { paid: 0, owed: 0, net: 0 };
+        doc.text(m.name, 20, yOffset);
+        doc.text(`${state.currency}${ms.paid.toFixed(2)}`, 70, yOffset, { align: 'right' });
+        doc.text(`${state.currency}${ms.owed.toFixed(2)}`, 110, yOffset, { align: 'right' });
+        
+        let netString = '';
+        if (ms.net > 0.01) {
+          netString = `+${state.currency}${ms.net.toFixed(2)}`;
+        } else if (ms.net < -0.01) {
+          netString = `-${state.currency}${Math.abs(ms.net).toFixed(2)}`;
+        } else {
+          netString = `${state.currency}0.00`;
+        }
+        
+        doc.text(netString, 150, yOffset, { align: 'right' });
+        yOffset += 8;
+      }
+
+      // Divider Line
+      doc.line(20, yOffset, 190, yOffset);
+      yOffset += 12;
+
+      // Settlement Path Header
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text('Settlement Directions', 20, yOffset);
+      yOffset += 10;
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(10);
+      
+      if (summary.settlements.length === 0) {
+        doc.text('Everyone is fully settled! No transactions required.', 20, yOffset);
+      } else {
+        for (const item of summary.settlements) {
+          const fromName = state.members.find(m => m.id === item.from)?.name || 'Deleted Member';
+          const toName = state.members.find(m => m.id === item.to)?.name || 'Deleted Member';
+          doc.text(`-  [ ]  ${fromName} pays ${toName}   -->   ${state.currency}${item.amount.toFixed(2)}`, 20, yOffset);
+          yOffset += 8;
+        }
+      }
+
+      yOffset += 12;
+      doc.line(20, yOffset, 190, yOffset);
+      yOffset += 8;
+      
+      doc.setFontSize(8);
+      doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+      doc.text('Generated instantly by SplitWhat — Private client-side bill splitting.', 20, yOffset);
+
+      const filename = `${state.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}_summary.pdf`;
+      doc.save(filename);
+      showToast('PDF summary downloaded.');
+    } catch (e) {
+      console.error('PDF export crash guard:', e);
+      showToast('Failed to export PDF.', 'error');
+    }
+  });
+
+  // Run initial loading
+  init();
+</script>
