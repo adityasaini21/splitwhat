@@ -9,6 +9,7 @@ export interface Expense {
   id: string;
   title: string;
   category: string;
+  subCategory?: string;
   amount: number;
   paidBy: string; // Member.id
   splitAmong: string[]; // Member.id[]

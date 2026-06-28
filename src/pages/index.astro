@@ -7,107 +7,186 @@ import Layout from '../layouts/Layout.astro';
   <div class="mesh-gradient-bg"></div>
 
   <!-- Hero Section -->
-  <section class="relative overflow-hidden py-24 sm:py-32">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-      <!-- Announcement Banner -->
-      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-1 text-xs text-body shadow-vercel-sm mb-8">
-        <span class="font-mono text-xs font-semibold uppercase tracking-wider text-link">New</span>
-        <span class="h-3 w-px bg-hairline"></span>
-        <span>Version 2.0 with PDF export & QR sharing.</span>
-      </div>
+  <section class="relative overflow-hidden py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Side: Copy and CTAs -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+          <!-- Announcement Banner -->
+          <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-1 text-xs text-body shadow-sm mb-4">
+            <span class="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">New</span>
+            <span class="h-3 w-px bg-hairline"></span>
+            <span>Version 2.0 with PDF export & QR sharing.</span>
+          </div>
 
-      <!-- Tagline -->
-      <h1 class="text-4xl font-semibold tracking-[-2.4px] text-ink sm:text-6xl max-w-3xl mx-auto leading-none">
-        Split expenses. No accounts. Instant settlement.
-      </h1>
-      
-      <!-- Subcopy -->
-      <p class="mt-6 text-lg sm:text-xl text-body max-w-2xl mx-auto leading-relaxed">
-        A Vercel-inspired bill splitter designed for developers, roommates, and travelers. 
-        Zero logins, 100% client-side, offline-first. Split travel costs or subscription fees in seconds.
-      </p>
+          <!-- Tagline -->
+          <h1 class="text-4xl font-bold tracking-tight text-ink sm:text-6xl max-w-3xl leading-none">
+            Split expenses.<br />
+            No accounts.<br />
+            <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">Instant settlement.</span>
+          </h1>
+          
+          <!-- Subcopy -->
+          <p class="text-base sm:text-lg text-body max-w-2xl leading-relaxed">
+            A Vercel-inspired bill splitter designed for developers, roommates, and travelers. 
+            Zero logins, 100% client-side, offline-first. Split travel costs or subscription fees in seconds.
+          </p>
 
-      <!-- CTA Cluster -->
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a 
-          href="/app" 
-          class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-base font-semibold text-on-primary hover:bg-primary/95 transition-colors shadow-vercel-md"
-        >
-          Start Splitting Free
-        </a>
-        <a 
-          href="#features" 
-          class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-full border border-hairline bg-canvas px-8 text-base font-semibold text-ink hover:bg-canvas-soft-2 transition-colors shadow-vercel-sm"
-        >
-          Learn More
-        </a>
+          <!-- CTA Cluster -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+            <a 
+              href="/app" 
+              class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-8 text-base font-semibold text-white hover:opacity-95 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all scale-100 hover:scale-105 active:scale-95"
+            >
+              Start Splitting Free
+            </a>
+            <a 
+              href="#features" 
+              class="w-full sm:w-auto inline-flex h-12 items-center justify-center rounded-full border border-hairline bg-canvas px-8 text-base font-semibold text-ink hover:bg-canvas-soft transition-all scale-100 hover:scale-105 active:scale-95 shadow-sm"
+            >
+              Learn More
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Side: Floating Preview Cards (desktop only) -->
+        <div class="hidden lg:block lg:col-span-5 relative h-[480px]">
+          <!-- Background blob behind cards -->
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 filter blur-3xl pointer-events-none"></div>
+          
+          <!-- Card 1: Total spend summary card -->
+          <div class="absolute top-8 left-0 w-72 vercel-card p-6 rotate-[-3deg] hover:rotate-0 hover:scale-105 transition-all duration-300 z-10 animate-float">
+            <div class="flex items-center justify-between mb-4 border-b border-hairline pb-3">
+              <h3 class="text-sm font-semibold text-ink">Trip Expenses</h3>
+              <span class="text-[10px] font-mono bg-canvas-soft-2 px-2 py-0.5 rounded text-body border border-hairline">3 members</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-body">Total Spend</span>
+                <span class="text-lg font-bold text-ink font-mono">$1,245.00</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-body">Top Spender</span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 px-2 py-0.5 text-[10px] font-semibold text-indigo-500 dark:text-indigo-400">
+                  Alex
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Settlement Path display card -->
+          <div class="absolute bottom-8 right-0 w-76 vercel-card p-6 rotate-[3deg] hover:rotate-0 hover:scale-105 transition-all duration-300 z-20 animate-float-reverse">
+            <div class="flex items-center justify-between mb-3 border-b border-hairline pb-2">
+              <h3 class="text-sm font-semibold text-ink">Settlement Path</h3>
+              <span class="text-[10px] font-mono text-emerald-500 font-semibold uppercase tracking-wider">Optimized</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500/10 text-[10px] font-bold text-rose-500">S</span>
+                  <span class="text-xs font-semibold text-ink">Sam</span>
+                </div>
+                <span class="text-xs text-mute flex items-center gap-1">owes <span class="animate-pulse text-indigo-500 font-bold">→</span></span>
+                <div class="flex items-center gap-1.5">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/10 text-[10px] font-bold text-indigo-500">A</span>
+                  <span class="text-xs font-semibold text-ink">Alex</span>
+                </div>
+                <span class="text-xs font-bold text-indigo-500 dark:text-indigo-400 font-mono ml-auto">$85.00</span>
+              </div>
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500/10 text-[10px] font-bold text-rose-500">J</span>
+                  <span class="text-xs font-semibold text-ink">Jo</span>
+                </div>
+                <span class="text-xs text-mute flex items-center gap-1">owes <span class="animate-pulse text-indigo-500 font-bold">→</span></span>
+                <div class="flex items-center gap-1.5">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/10 text-[10px] font-bold text-indigo-500">A</span>
+                  <span class="text-xs font-semibold text-ink">Alex</span>
+                </div>
+                <span class="text-xs font-bold text-indigo-500 dark:text-indigo-400 font-mono ml-auto">$12.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Mini Quick Log form card -->
+          <div class="absolute top-36 right-12 w-64 vercel-card p-4 rotate-[-1deg] hover:rotate-0 hover:scale-105 transition-all duration-300 z-15 scale-95">
+            <div class="text-[9px] font-mono text-mute uppercase tracking-widest mb-2 font-semibold">Latest Expense</div>
+            <div class="space-y-2">
+              <div class="h-8 px-2 rounded border border-hairline bg-canvas/50 flex items-center justify-between text-xs">
+                <span class="text-body font-medium">Pizza Dinner 🍕</span>
+                <span class="font-mono text-ink font-semibold">$90.00</span>
+              </div>
+              <div class="text-[10px] text-body">Paid by Sam, split among 3.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Feature Grid Section -->
-  <section id="features" class="border-t border-hairline bg-canvas py-24 sm:py-32">
+  <section id="features" class="border-t border-hairline bg-canvas py-20 sm:py-28">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-3xl mx-auto">
-        <p class="font-mono text-xs font-semibold uppercase tracking-wider text-mute">Built for Developers & Power Users</p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-[-1.28px] text-ink sm:text-4xl">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <p class="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Built for Developers & Power Users</p>
+        <h2 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
           Everything you need. Done locally.
         </h2>
-        <p class="mt-4 text-base text-body">
+        <p class="text-base text-body">
           We stripped away the database, the signup forms, and the latency. You get pure utility.
         </p>
       </div>
 
       <div class="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <!-- Feature 1 -->
-        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
-          <div class="font-mono text-xs text-mute mb-4">01 / SPEED</div>
-          <h3 class="text-lg font-semibold tracking-tight text-ink">No Accounts Required</h3>
+        <div class="vercel-card p-6">
+          <div class="font-mono text-xs text-mute mb-4 font-semibold">01 / SPEED</div>
+          <h3 class="text-lg font-bold tracking-tight text-ink">No Accounts Required</h3>
           <p class="mt-2 text-sm text-body">
             Skip the sign-up flow. Start splitting bills instantly the second you open the app.
           </p>
         </div>
 
         <!-- Feature 2 -->
-        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
-          <div class="font-mono text-xs text-mute mb-4">02 / PRIVACY</div>
-          <h3 class="text-lg font-semibold tracking-tight text-ink">100% Client-Side</h3>
+        <div class="vercel-card p-6">
+          <div class="font-mono text-xs text-mute mb-4 font-semibold">02 / PRIVACY</div>
+          <h3 class="text-lg font-bold tracking-tight text-ink">100% Client-Side</h3>
           <p class="mt-2 text-sm text-body">
             All data is saved in your local browser storage. No servers, no tracking, completely secure.
           </p>
         </div>
 
         <!-- Feature 3 -->
-        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
-          <div class="font-mono text-xs text-mute mb-4">03 / COLLABORATION</div>
-          <h3 class="text-lg font-semibold tracking-tight text-ink">URL State Sharing</h3>
+        <div class="vercel-card p-6">
+          <div class="font-mono text-xs text-mute mb-4 font-semibold">03 / COLLABORATION</div>
+          <h3 class="text-lg font-bold tracking-tight text-ink">URL State Sharing</h3>
           <p class="mt-2 text-sm text-body">
             Encode your split state inside a compressed URL param. Just copy the link and send it.
           </p>
         </div>
 
         <!-- Feature 4 -->
-        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
-          <div class="font-mono text-xs text-mute mb-4">04 / VERSATILITY</div>
-          <h3 class="text-lg font-semibold tracking-tight text-ink">Dual Splitting Modes</h3>
+        <div class="vercel-card p-6">
+          <div class="font-mono text-xs text-mute mb-4 font-semibold">04 / VERSATILITY</div>
+          <h3 class="text-lg font-bold tracking-tight text-ink">Dual Splitting Modes</h3>
           <p class="mt-2 text-sm text-body">
             Toggle between subscription mode for recurring costs or travel mode for group trips.
           </p>
         </div>
 
         <!-- Feature 5 -->
-        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
-          <div class="font-mono text-xs text-mute mb-4">05 / MATHEMATICS</div>
-          <h3 class="text-lg font-semibold tracking-tight text-ink">Smart Debt Minimization</h3>
+        <div class="vercel-card p-6">
+          <div class="font-mono text-xs text-mute mb-4 font-semibold">05 / MATHEMATICS</div>
+          <h3 class="text-lg font-bold tracking-tight text-ink">Smart Debt Minimization</h3>
           <p class="mt-2 text-sm text-body">
             Our settlement algorithm computes the minimum number of payments needed to clear all debts.
           </p>
         </div>
 
         <!-- Feature 6 -->
-        <div class="rounded-lg border border-hairline bg-canvas-soft p-6 shadow-vercel-sm transition-transform hover:-translate-y-0.5">
-          <div class="font-mono text-xs text-mute mb-4">06 / EXPORT</div>
-          <h3 class="text-lg font-semibold tracking-tight text-ink">PDFs & QR Codes</h3>
+        <div class="vercel-card p-6">
+          <div class="font-mono text-xs text-mute mb-4 font-semibold">06 / EXPORT</div>
+          <h3 class="text-lg font-bold tracking-tight text-ink">PDFs & QR Codes</h3>
           <p class="mt-2 text-sm text-body">
             Export a high-quality PDF report or show a QR code for mobile scanning instantly.
           </p>
@@ -117,38 +196,38 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- How It Works Section -->
-  <section class="border-t border-hairline bg-canvas-soft py-24 sm:py-32">
+  <section class="border-t border-hairline bg-canvas-soft py-20 sm:py-28">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-3xl mx-auto">
-        <p class="font-mono text-xs font-semibold uppercase tracking-wider text-mute">Simple Workflow</p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-[-1.28px] text-ink sm:text-4xl">
+      <div class="text-center max-w-3xl mx-auto space-y-2">
+        <p class="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Simple Workflow</p>
+        <h2 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
           Three steps to settlement.
         </h2>
       </div>
 
-      <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3 relative">
+      <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
         <!-- Step 1 -->
-        <div class="flex flex-col items-start p-6">
-          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-xs text-on-primary mb-6">1</div>
-          <h3 class="text-lg font-semibold text-ink">Create Group & Add Members</h3>
+        <div class="flex flex-col items-start p-6 vercel-card">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 font-mono text-xs font-bold text-white mb-6 shadow-md">1</div>
+          <h3 class="text-lg font-bold text-ink">Create Group & Add Members</h3>
           <p class="mt-2 text-sm text-body">
             Enter a group name, pick your currency, and add up to 30 members. No signup required.
           </p>
         </div>
 
         <!-- Step 2 -->
-        <div class="flex flex-col items-start p-6">
-          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-xs text-on-primary mb-6">2</div>
-          <h3 class="text-lg font-semibold text-ink">Log Group Expenses</h3>
+        <div class="flex flex-col items-start p-6 vercel-card">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 font-mono text-xs font-bold text-white mb-6 shadow-md">2</div>
+          <h3 class="text-lg font-bold text-ink">Log Group Expenses</h3>
           <p class="mt-2 text-sm text-body">
             Add bills, titles, and amounts. Choose who paid and select which members split the expense.
           </p>
         </div>
 
         <!-- Step 3 -->
-        <div class="flex flex-col items-start p-6">
-          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-xs text-on-primary mb-6">3</div>
-          <h3 class="text-lg font-semibold text-ink">Share & Settle Up</h3>
+        <div class="flex flex-col items-start p-6 vercel-card">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 font-mono text-xs font-bold text-white mb-6 shadow-md">3</div>
+          <h3 class="text-lg font-bold text-ink">Share & Settle Up</h3>
           <p class="mt-2 text-sm text-body">
             View the minimal payment matrix. Share the link, display the QR code, or export to PDF.
           </p>
@@ -158,7 +237,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="mt-12 text-center">
         <a 
           href="/app" 
-          class="inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-on-primary hover:bg-primary/95 transition-colors shadow-vercel-sm"
+          class="inline-flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-8 text-sm font-semibold text-white hover:opacity-95 shadow-md scale-100 hover:scale-105 active:scale-95 transition-all"
         >
           Try the App Now
         </a>
@@ -167,14 +246,14 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- FAQ Section -->
-  <section class="border-t border-hairline bg-canvas py-24 sm:py-32">
+  <section class="border-t border-hairline bg-canvas py-20 sm:py-28">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-3xl divide-y divide-hairline">
-        <h2 class="text-3xl font-semibold tracking-[-1.28px] text-ink text-center mb-12">Frequently Asked Questions</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-ink text-center mb-12">Frequently Asked Questions</h2>
         
         <!-- FAQ 1 -->
         <div class="py-6">
-          <h3 class="text-base font-semibold text-ink font-sans">Where is my data stored?</h3>
+          <h3 class="text-base font-bold text-ink">Where is my data stored?</h3>
           <p class="mt-2 text-sm text-body">
             All calculations and data exist entirely in your browser. We use local storage to save your groups. We do not use any databases or servers, keeping your financial activities private.
           </p>
@@ -182,7 +261,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- FAQ 2 -->
         <div class="py-6">
-          <h3 class="text-base font-semibold text-ink font-sans">How does sharing work without a backend database?</h3>
+          <h3 class="text-base font-bold text-ink">How does sharing work without a backend database?</h3>
           <p class="mt-2 text-sm text-body">
             We compress the entire group state (members, expenses, and config) into a short base64 string using `lz-string`. We append this string as a URL query parameter. When someone opens your shared link, the app extracts, decompresses, and loads it instantly.
           </p>
@@ -190,7 +269,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- FAQ 3 -->
         <div class="py-6">
-          <h3 class="text-base font-semibold text-ink font-sans">Is SplitWhat really free?</h3>
+          <h3 class="text-base font-bold text-ink">Is SplitWhat really free?</h3>
           <p class="mt-2 text-sm text-body">
             Yes, it is 100% free. There are no premium tiers, no limits on number of groups, and absolutely no ads.
           </p>
@@ -198,7 +277,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- FAQ 4 -->
         <div class="py-6">
-          <h3 class="text-base font-semibold text-ink font-sans">Can I use SplitWhat offline?</h3>
+          <h3 class="text-base font-bold text-ink">Can I use SplitWhat offline?</h3>
           <p class="mt-2 text-sm text-body">
             Yes. Since the app is built on Astro and uses 100% client-side logic for parsing, compiling, QR generating, and PDF printing, it runs perfectly without an active internet connection.
           </p>
@@ -206,7 +285,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- FAQ 5 -->
         <div class="py-6">
-          <h3 class="text-base font-semibold text-ink font-sans">What happens if the sharing link gets too long?</h3>
+          <h3 class="text-base font-bold text-ink">What happens if the sharing link gets too long?</h3>
           <p class="mt-2 text-sm text-body">
             Since the entire data is stored in the URL, a huge number of expenses will make the URL very long. We show a friendly warning if the URL exceeds 2,000 characters. To prevent this, keep your group lists under 300 expenses.
           </p>

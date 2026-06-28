@@ -112,10 +112,11 @@ export function sanitizeGroupState(state: any): GroupState | null {
             e.amount > 0 &&
             expenses.length < LIMITS.MAX_EXPENSES
           ) {
-            expenses.push({
+             expenses.push({
               id: e.id,
               title: e.title.trim().substring(0, LIMITS.MAX_EXPENSE_TITLE_LENGTH),
               category: typeof e.category === 'string' ? e.category : 'other',
+              subCategory: typeof e.subCategory === 'string' ? e.subCategory : undefined,
               amount: Math.round(e.amount * 100) / 100,
               paidBy: e.paidBy,
               splitAmong: cleanSplitAmong,

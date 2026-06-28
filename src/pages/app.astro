@@ -3,61 +3,113 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="SplitWhat App — Split Expenses Instantly" description="Frontend-only bill splitter. No signup required. Perfect for trip expenses and subscription splits.">
+  <!-- Background Mesh Gradient -->
+  <div class="mesh-gradient-bg"></div>
+
   <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
     
     <!-- Top Configuration Bar (Group Name, Currency, Mode) -->
-    <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm mb-8">
+    <div class="vercel-card p-6 mb-8">
+      <div class="flex items-center gap-2 mb-4 text-xs font-semibold font-mono text-indigo-500 uppercase tracking-widest">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <span>Group Settings</span>
+      </div>
+
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3 items-end">
-        <!-- Group Name -->
-        <div>
-          <label for="group-name" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Group Name</label>
+        <!-- Group Name with Floating Label -->
+        <div class="relative group">
+          <span class="absolute left-3 top-3.5 text-mute">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+            </svg>
+          </span>
           <input 
             type="text" 
             id="group-name" 
             value="My Trip"
-            class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
-            placeholder="e.g. Europe Trip 2026"
+            placeholder=" "
+            class="peer w-full h-11 pl-10 pr-3 pt-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:opacity-0 vercel-input"
             maxlength="100"
           />
+          <label 
+            for="group-name" 
+            class="absolute left-10 top-1.5 text-mute text-[9px] tracking-wider uppercase font-mono transition-all pointer-events-none origin-[0_0] peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:text-[9px] peer-focus:text-indigo-500 font-semibold"
+          >
+            Group Name
+          </label>
+          <p class="text-[10px] text-mute mt-1.5">Includes in all PDF/QR exports</p>
         </div>
 
         <!-- Currency & Mode Toggle Row -->
         <div class="grid grid-cols-2 gap-4">
           <!-- Currency Selector -->
           <div>
-            <label for="currency-selector" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Currency</label>
+            <label for="currency-selector" class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Currency</label>
             <select 
               id="currency-selector" 
-              class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-mono text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+              class="w-full h-10 px-3 rounded-xl border border-hairline bg-canvas text-ink font-mono text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all cursor-pointer"
             >
-              <option value="$">USD ($)</option>
-              <option value="€">EUR (€)</option>
-              <option value="£">GBP (£)</option>
-              <option value="₹">INR (₹)</option>
-              <option value="¥">JPY (¥)</option>
-              <option value="A$">AUD (A$)</option>
-              <option value="C$">CAD (C$)</option>
-              <option value="₪">ILS (₪)</option>
+              <option value="$">🇺🇸 USD ($)</option>
+              <option value="€">🇪🇺 EUR (€)</option>
+              <option value="£">🇬🇧 GBP (£)</option>
+              <option value="₹">🇮🇳 INR (₹)</option>
+              <option value="¥">🇯🇵 JPY (¥)</option>
+              <option value="A$">🇦🇺 AUD (A$)</option>
+              <option value="C$">🇨🇦 CAD (C$)</option>
+              <option value="CHF">🇨🇭 CHF (CHF)</option>
+              <option value="元">🇨🇳 CNY (元)</option>
+              <option value="HK$">🇭🇰 HKD (HK$)</option>
+              <option value="NZ$">🇳🇿 NZD (NZ$)</option>
+              <option value="S$">🇸🇬 SGD (S$)</option>
+              <option value="₩">🇰🇷 KRW (₩)</option>
+              <option value="R$">🇧🇷 BRL (R$)</option>
+              <option value="R">🇿🇦 ZAR (R)</option>
+              <option value="Mex$">🇲🇽 MXN (Mex$)</option>
+              <option value="AED">🇦🇪 AED (Dh)</option>
+              <option value="kr">🇸🇪 SEK (kr)</option>
+              <option value="kr">🇳🇴 NOK (kr)</option>
+              <option value="kr">🇩🇰 DKK (kr)</option>
+              <option value="₺">🇹🇷 TRY (₺)</option>
+              <option value="₽">🇷🇺 RUB (₽)</option>
+              <option value="₱">🇵🇭 PHP (₱)</option>
+              <option value="RM">🇲🇾 MYR (RM)</option>
+              <option value="Rp">🇮🇩 IDR (Rp)</option>
+              <option value="฿">🇹🇭 THB (฿)</option>
+              <option value="₫">🇻🇳 VND (₫)</option>
+              <option value="zł">🇵🇱 PLN (zł)</option>
+              <option value="SR">🇸🇦 SAR (SR)</option>
+              <option value="₪">🇮🇱 ILS (₪)</option>
+              <option value="Kč">🇨🇿 CZK (Kč)</option>
+              <option value="Ft">🇭🇺 HUF (Ft)</option>
+              <option value="lei">🇷🇴 RON (lei)</option>
+              <option value="Kn">🇭🇷 HRK (kn)</option>
+              <option value="din">🇷🇸 RSD (din)</option>
+              <option value="lev">🇧🇬 BGN (lev)</option>
+              <option value="₴">🇺🇦 UAH (₴)</option>
+              <option value="₸">🇰🇿 KZT (₸)</option>
             </select>
           </div>
 
           <!-- Mode Toggle -->
           <div>
-            <label class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Split Mode</label>
-            <div class="relative flex h-10 items-center justify-between rounded-md border border-hairline bg-canvas-soft-2 p-1">
+            <label class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Split Mode</label>
+            <div class="relative flex h-10 items-center justify-between rounded-xl border border-hairline bg-canvas-soft-2 p-1">
               <button 
                 type="button" 
                 id="mode-travel-btn"
-                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-ink bg-canvas shadow-vercel-sm"
+                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-ink bg-canvas shadow-sm cursor-pointer"
               >
                 Travel
               </button>
               <button 
                 type="button" 
                 id="mode-subscription-btn"
-                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-body hover:text-ink"
+                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-body hover:text-ink cursor-pointer"
               >
-                Subscription
+                Sub
               </button>
             </div>
           </div>
@@ -67,14 +119,14 @@ import Layout from '../layouts/Layout.astro';
         <div class="flex items-center justify-end gap-3 h-10">
           <select 
             id="recent-splits-selector" 
-            class="hidden md:block h-10 px-3 rounded-md border border-hairline bg-canvas text-body font-sans text-xs focus:border-primary focus:ring-0 outline-none max-w-[180px] transition-colors"
+            class="hidden md:block h-10 px-3 rounded-xl border border-hairline bg-canvas text-body font-sans text-xs focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none max-w-[180px] transition-all cursor-pointer"
           >
-            <option value="">Load Recent Split...</option>
+            <option value="">Load Recent...</option>
           </select>
           <button 
             type="button" 
             id="reset-group-btn"
-            class="inline-flex h-10 items-center justify-center rounded-md border border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-colors"
+            class="inline-flex h-10 items-center justify-center rounded-xl border border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-all cursor-pointer active:scale-95 shadow-sm"
           >
             Reset Group
           </button>
@@ -89,198 +141,296 @@ import Layout from '../layouts/Layout.astro';
       <div class="lg:col-span-7 space-y-8">
         
         <!-- Members List Card -->
-        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+        <div class="vercel-card p-6">
           <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
-            <div>
-              <h2 class="text-lg font-semibold tracking-tight text-ink">Group Members</h2>
-              <p class="text-xs text-body mt-0.5">Add people who will split the bills.</p>
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <div>
+                <h2 class="text-lg font-bold tracking-tight text-ink">Group Members</h2>
+                <p class="text-xs text-body mt-0.5">Add people who will split the bills.</p>
+              </div>
             </div>
-            <span id="members-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2 py-0.5 rounded text-mute border border-hairline">
+            <span id="members-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2.5 py-1 rounded-full text-body border border-hairline font-semibold">
               0 / 30
             </span>
           </div>
 
-          <!-- Add Member Input -->
-          <form id="add-member-form" class="flex gap-2 mb-4">
+          <!-- Add Member Input (Inline Form) -->
+          <form id="add-member-form" class="flex gap-3 mb-6 items-start">
             <div class="relative flex-grow">
+              <span class="absolute left-3 top-3.5 text-mute">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+              </span>
               <input 
                 type="text" 
                 id="new-member-name" 
-                class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
-                placeholder="Enter name (e.g. Alex, Sam)"
+                placeholder=" " 
+                class="peer w-full h-11 pl-10 pr-3 pt-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:opacity-0 vercel-input"
                 maxlength="50"
               />
+              <label 
+                for="new-member-name" 
+                class="absolute left-10 top-1.5 text-mute text-[9px] tracking-wider uppercase font-mono transition-all pointer-events-none origin-[0_0] peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:text-[9px] peer-focus:text-indigo-500 font-semibold"
+              >
+                Member Name
+              </label>
               <span id="member-validation-error" class="hidden absolute left-0 -bottom-5 text-[10px] text-error font-sans"></span>
             </div>
             <button 
               type="submit" 
-              class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-on-primary hover:bg-primary/90 transition-colors shadow-vercel-sm"
+              class="inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-6 text-sm font-semibold text-white hover:opacity-95 transition-all shadow-md active:scale-95 cursor-pointer"
             >
               Add
             </button>
           </form>
 
           <!-- Members Chips Container -->
-          <div id="members-list-container" class="flex flex-wrap gap-2 mt-6 min-h-[40px] items-center text-center">
+          <div id="members-list-container" class="flex flex-wrap gap-2.5 mt-6 min-h-[40px] items-center">
             <!-- Dynamic Member Chips -->
-            <p id="empty-members-placeholder" class="text-sm text-mute italic py-2">No members added yet. Add at least two to split bills.</p>
+            <div id="empty-members-placeholder" class="py-4 text-center flex flex-col items-center justify-center text-mute space-y-2 w-full">
+              <svg class="h-10 w-10 text-mute/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span class="text-xs font-semibold text-ink">No members added yet</span>
+              <span class="text-[10px] text-mute max-w-xs">Add at least two people to start splitting expenses.</span>
+            </div>
           </div>
         </div>
 
-        <!-- Add Expense Form Card -->
-        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm relative">
-          <div class="border-b border-hairline pb-4 mb-6">
-            <h2 class="text-lg font-semibold tracking-tight text-ink">Add Expense</h2>
-            <p class="text-xs text-body mt-0.5">Enter expense item details below.</p>
-          </div>
-
-          <div id="expense-form-error-summary" class="hidden rounded-md bg-error-soft/40 border border-error-soft text-error-deep p-3 text-xs mb-4">
-            Please correct the validation errors below.
-          </div>
-
-          <form id="add-expense-form" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Title -->
-              <div>
-                <label for="expense-title" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Title</label>
-                <input 
-                  type="text" 
-                  id="expense-title" 
-                  class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
-                  placeholder="e.g. Flights, Dinner"
-                  maxlength="100"
-                />
-                <span id="err-expense-title" class="hidden text-[10px] text-error mt-1"></span>
-              </div>
-
-              <!-- Category -->
-              <div>
-                <label for="expense-category" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Category</label>
-                <select 
-                  id="expense-category" 
-                  class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+        <!-- Add Expense Form Container (Acts as Bottom Sheet on Mobile) -->
+        <div id="add-expense-card-container" class="fixed inset-x-0 bottom-0 z-50 rounded-t-3xl bg-canvas p-6 shadow-2xl transform translate-y-full transition-transform duration-300 md:relative md:inset-auto md:translate-y-0 md:rounded-2xl md:shadow-none md:z-auto md:bg-transparent md:p-0">
+          
+          <div class="vercel-card p-6 h-full md:h-auto overflow-y-auto max-h-[85vh] md:max-h-none">
+            <!-- Drag indicator / Close handle for Mobile Sheet -->
+            <div class="flex flex-col items-center pb-4 md:hidden">
+              <div class="w-12 h-1.5 bg-zinc-300 dark:bg-zinc-700 rounded-full mb-3"></div>
+              <div class="flex justify-between items-center w-full">
+                <span class="text-sm font-bold text-ink">Add Expense</span>
+                <button 
+                  id="close-mobile-sheet-btn" 
+                  type="button" 
+                  class="text-mute hover:text-ink font-semibold text-lg p-1"
                 >
-                  <!-- Dynamically populated categories -->
-                </select>
+                  ✕
+                </button>
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Amount -->
+            <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-6">
+              <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+              </svg>
               <div>
-                <label for="expense-amount" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Amount</label>
+                <h2 class="text-lg font-bold tracking-tight text-ink">Add Expense</h2>
+                <p class="text-xs text-body mt-0.5">Enter expense item details below.</p>
+              </div>
+            </div>
+
+            <div id="expense-form-error-summary" class="hidden rounded-xl bg-error-soft/30 border border-error/20 text-error-deep p-3 text-xs mb-4">
+              Please correct the validation errors below.
+            </div>
+
+            <form id="add-expense-form" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Title with Floating Label -->
+                <div class="relative group">
+                  <span class="absolute left-3 top-3.5 text-mute">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M6 20a1 1 0 02-1-1v-4.586a1 1 0 01.293-.707l7-7a1 1 0 011.414 0l4.586 4.586a1 1 0 010 1.414l-7 7a1 1 0 01-.707.293H6z"></path>
+                    </svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="expense-title" 
+                    placeholder=" "
+                    class="peer w-full h-11 pl-10 pr-3 pt-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:opacity-0 vercel-input"
+                    maxlength="100"
+                  />
+                  <label 
+                    for="expense-title" 
+                    class="absolute left-10 top-1.5 text-mute text-[9px] tracking-wider uppercase font-mono transition-all pointer-events-none origin-[0_0] peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:text-[9px] peer-focus:text-indigo-500 font-semibold"
+                  >
+                    Expense Title
+                  </label>
+                  <span id="err-expense-title" class="hidden text-[10px] text-error mt-1.5 block"></span>
+                  <p class="text-[10px] text-mute mt-1.5">e.g. Flights, Pizza, Rent</p>
+                </div>
+
+                <!-- Category & Streaming Provider -->
+                <div class="space-y-3">
+                  <div>
+                    <label for="expense-category" class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Category</label>
+                    <select 
+                      id="expense-category" 
+                      class="w-full h-11 px-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all cursor-pointer"
+                    >
+                      <!-- Dynamically populated categories -->
+                    </select>
+                  </div>
+                  <!-- Streaming Provider selector (only shown when Streaming category is selected) -->
+                  <div id="streaming-service-container" class="hidden animate-fade-in">
+                    <label for="streaming-service" class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Streaming Provider</label>
+                    <select 
+                      id="streaming-service" 
+                      class="w-full h-11 px-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all cursor-pointer"
+                    >
+                      <option value="netflix">Netflix 🍿</option>
+                      <option value="prime">Amazon Prime Video 📦</option>
+                      <option value="disney">Disney+ 🏰</option>
+                      <option value="hulu">Hulu 🟢</option>
+                      <option value="hbo">Max (HBO) 🟣</option>
+                      <option value="apple">Apple TV+ 🍎</option>
+                      <option value="peacock">Peacock 🦚</option>
+                      <option value="paramount">Paramount+ 🏔️</option>
+                      <option value="youtube">YouTube Premium 🔴</option>
+                      <option value="crunchyroll">Crunchyroll 🍥</option>
+                      <option value="other">Other Streaming 📺</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Amount with Floating Label -->
                 <div class="relative">
-                  <span id="expense-amount-symbol" class="absolute left-3 top-2.5 text-mute font-mono text-sm">$</span>
+                  <span id="expense-amount-symbol" class="absolute left-3 top-3 text-mute font-mono text-sm font-semibold">$</span>
                   <input 
                     type="number" 
                     id="expense-amount" 
                     step="0.01" 
                     min="0.01"
-                    class="w-full h-10 pl-8 pr-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
-                    placeholder="0.00"
+                    placeholder=" "
+                    class="peer w-full h-11 pl-8 pr-3 pt-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:opacity-0 vercel-input font-mono"
                   />
+                  <label 
+                    for="expense-amount" 
+                    class="absolute left-8 top-1.5 text-mute text-[9px] tracking-wider uppercase font-mono transition-all pointer-events-none origin-[0_0] peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:text-[9px] peer-focus:text-indigo-500 font-semibold"
+                  >
+                    Amount Paid
+                  </label>
+                  <span id="err-expense-amount" class="hidden text-[10px] text-error mt-1.5 block"></span>
+                  <p class="text-[10px] text-mute mt-1.5">Enter the total amount paid</p>
                 </div>
-                <span id="err-expense-amount" class="hidden text-[10px] text-error mt-1"></span>
-              </div>
 
-              <!-- Paid By -->
-              <div>
-                <label for="expense-paid-by" class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-2">Paid By</label>
-                <select 
-                  id="expense-paid-by" 
-                  class="w-full h-10 px-3 rounded-md border border-hairline bg-canvas text-ink font-sans text-sm focus:border-primary focus:ring-0 outline-none transition-colors"
-                >
-                  <option value="">Choose member...</option>
-                </select>
-                <span id="err-expense-paid-by" class="hidden text-[10px] text-error mt-1"></span>
-              </div>
-            </div>
-
-            <!-- Split Among Checkboxes -->
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider">Split Among</span>
-                <div class="flex gap-2">
-                  <button type="button" id="split-select-all" class="text-xs text-link hover:underline">Select All</button>
-                  <span class="text-xs text-mute font-mono">•</span>
-                  <button type="button" id="split-deselect-all" class="text-xs text-link hover:underline">Deselect All</button>
+                <!-- Paid By -->
+                <div>
+                  <label for="expense-paid-by" class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Paid By</label>
+                  <select 
+                    id="expense-paid-by" 
+                    class="w-full h-11 px-3 rounded-xl border border-hairline bg-canvas text-ink font-sans text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all cursor-pointer"
+                  >
+                    <option value="">Choose member...</option>
+                  </select>
+                  <span id="err-expense-paid-by" class="hidden text-[10px] text-error mt-1.5 block"></span>
                 </div>
               </div>
 
-              <div id="split-members-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3 rounded-md border border-hairline bg-canvas-soft-2 max-h-[140px] overflow-y-auto">
-                <!-- Checkboxes populated dynamically -->
-                <p id="split-empty-placeholder" class="col-span-full text-xs text-mute italic text-center py-2">Add group members to split with.</p>
-              </div>
-              <span id="err-expense-split-among" class="hidden text-[10px] text-error mt-1"></span>
-            </div>
+              <!-- Split Among Checkboxes -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider">Split Among</span>
+                  <div class="flex gap-2">
+                    <button type="button" id="split-select-all" class="text-xs text-indigo-500 hover:text-indigo-600 font-semibold transition-colors cursor-pointer">Select All</button>
+                    <span class="text-xs text-mute font-mono">•</span>
+                    <button type="button" id="split-deselect-all" class="text-xs text-indigo-500 hover:text-indigo-600 font-semibold transition-colors cursor-pointer">Deselect All</button>
+                  </div>
+                </div>
 
-            <!-- Submit Button -->
-            <button 
-              type="submit" 
-              class="w-full inline-flex h-10 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-on-primary hover:bg-primary/90 transition-colors shadow-vercel-sm"
-            >
-              Add Expense
-            </button>
-          </form>
+                <div id="split-members-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-xl border border-hairline bg-canvas-soft-2 max-h-[140px] overflow-y-auto">
+                  <!-- Checkboxes populated dynamically -->
+                  <p id="split-empty-placeholder" class="col-span-full text-xs text-mute italic text-center py-2">Add group members to split with.</p>
+                </div>
+                <span id="err-expense-split-among" class="hidden text-[10px] text-error mt-1.5 block"></span>
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                type="submit" 
+                class="w-full inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-5 text-sm font-semibold text-white hover:opacity-95 transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                Log Expense
+              </button>
+            </form>
+          </div>
         </div>
 
-        <!-- Expenses List Card -->
-        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
+        <!-- Logged Expenses List Card -->
+        <div class="vercel-card p-6">
           <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
-            <div>
-              <h2 class="text-lg font-semibold tracking-tight text-ink">Logged Expenses</h2>
-              <p class="text-xs text-body mt-0.5">List of group bills.</p>
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+              </svg>
+              <div>
+                <h2 class="text-lg font-bold tracking-tight text-ink">Logged Expenses</h2>
+                <p class="text-xs text-body mt-0.5">List of group bills. Hover to view breakdown. Swipe left on mobile to delete.</p>
+              </div>
             </div>
-            <span id="expenses-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2 py-0.5 rounded text-mute border border-hairline">
+            <span id="expenses-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2.5 py-1 rounded-full text-body border border-hairline font-semibold">
               0 / 300
             </span>
           </div>
 
           <!-- Expenses Container -->
-          <div id="expenses-list-container" class="divide-y divide-hairline max-h-[400px] overflow-y-auto pr-1">
+          <div id="expenses-list-container" class="divide-y divide-hairline max-h-[420px] overflow-y-auto pr-1">
             <!-- Dynamic list -->
-            <p id="empty-expenses-placeholder" class="text-sm text-mute italic py-8 text-center">No expenses logged yet. Add your first expense above.</p>
+            <div id="empty-expenses-placeholder" class="py-12 text-center flex flex-col items-center justify-center text-mute space-y-2">
+              <svg class="h-12 w-12 text-mute/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5h.007v.008H3.75V4.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3 13.5h.008v.008H3V13.5zM12 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span class="text-xs font-semibold text-ink">No expenses logged yet</span>
+              <span class="text-[10px] text-mute max-w-xs">Log bills, flights, roommate payments above to distribute balances.</span>
+            </div>
           </div>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN: Summary & Settlements -->
-      <div class="lg:col-span-5 space-y-8">
+      <!-- RIGHT COLUMN: Summary & Settlements (Sticky on Desktop) -->
+      <div class="lg:col-span-5 space-y-8 lg:sticky lg:top-20">
         
         <!-- Summary Dashboard Card -->
-        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
-          <div class="border-b border-hairline pb-4 mb-6">
-            <h2 class="text-lg font-semibold tracking-tight text-ink">Split Summary</h2>
-            <p class="text-xs text-body mt-0.5">Calculated shares and net balances.</p>
+        <div class="vercel-card p-6">
+          <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-6">
+            <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <div>
+              <h2 class="text-lg font-bold tracking-tight text-ink">Split Summary</h2>
+              <p class="text-xs text-body mt-0.5">Calculated shares and net balances.</p>
+            </div>
           </div>
 
           <!-- Total Spend -->
-          <div class="mb-6 flex items-center justify-between bg-canvas-soft-2 p-4 rounded-md border border-hairline">
+          <div class="mb-6 flex items-center justify-between bg-canvas-soft-2 p-4 rounded-xl border border-hairline shadow-sm">
             <div>
-              <span class="block font-mono text-xs font-semibold text-mute uppercase tracking-wider">Total Spend</span>
-              <span id="summary-total-spend" class="text-3xl font-semibold tracking-tight text-ink mt-1">$0.00</span>
+              <span class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider">Total Spend</span>
+              <span id="summary-total-spend" class="text-3xl font-bold tracking-tight text-ink mt-1 font-mono tabular-nums">$0.00</span>
             </div>
             <div id="top-payer-badge-container" class="hidden flex-col items-end">
-              <span class="block font-mono text-[10px] text-mute uppercase tracking-wider">Top Spender</span>
-              <span id="summary-top-payer" class="inline-flex items-center gap-1 mt-1 rounded-full bg-link-bg-soft px-2 py-0.5 text-xs font-medium text-link">
+              <span class="block font-mono text-[9px] text-mute uppercase tracking-wider font-semibold">Top Spender</span>
+              <span id="summary-top-payer" class="inline-flex items-center gap-1 mt-1 rounded-full bg-indigo-500/10 px-2.5 py-1 text-xs font-semibold text-indigo-500 dark:text-indigo-400">
                 --
               </span>
             </div>
           </div>
 
           <!-- Members Grid Breakdown -->
-          <div>
-            <h3 class="font-mono text-xs font-semibold text-mute uppercase tracking-wider mb-3">Balance sheet</h3>
+          <div class="space-y-3">
+            <h3 class="font-mono text-[10px] font-semibold text-mute uppercase tracking-wider">Balance sheet</h3>
             
-            <div class="border border-hairline rounded-md overflow-hidden bg-canvas">
+            <div class="border border-hairline rounded-xl overflow-hidden bg-canvas shadow-sm">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-canvas-soft-2 border-b border-hairline">
-                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute">Member</th>
-                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute text-right">Paid</th>
-                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute text-right">Owed</th>
-                    <th class="p-3 text-xs font-mono font-semibold uppercase text-mute text-right">Net</th>
+                    <th class="p-3 text-[10px] font-mono font-semibold uppercase text-mute">Member</th>
+                    <th class="p-3 text-[10px] font-mono font-semibold uppercase text-mute text-right">Paid</th>
+                    <th class="p-3 text-[10px] font-mono font-semibold uppercase text-mute text-right">Owed</th>
+                    <th class="p-3 text-[10px] font-mono font-semibold uppercase text-mute text-right">Net</th>
                   </tr>
                 </thead>
                 <tbody id="summary-table-body" class="divide-y divide-hairline">
@@ -295,32 +445,48 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <!-- Settlements Card -->
-        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
-          <div class="border-b border-hairline pb-4 mb-4">
-            <h2 class="text-lg font-semibold tracking-tight text-ink">Settlement Path</h2>
-            <p class="text-xs text-body mt-0.5">Optimized list of debts to clear.</p>
+        <div class="vercel-card p-6">
+          <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-4">
+            <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+            </svg>
+            <div>
+              <h2 class="text-lg font-bold tracking-tight text-ink">Settlement Path</h2>
+              <p class="text-xs text-body mt-0.5">Optimized directions to settle debts.</p>
+            </div>
           </div>
 
-          <div id="settlements-list-container" class="space-y-3 min-h-[50px]">
+          <div id="settlements-list-container" class="space-y-4 min-h-[50px]">
             <!-- Dynamic Settlement Cards -->
-            <p id="empty-settlements-placeholder" class="text-sm text-mute italic py-6 text-center">Everyone is settled. No transfers needed!</p>
+            <div id="empty-settlements-placeholder" class="py-6 text-center flex flex-col items-center justify-center text-mute space-y-1 w-full">
+              <svg class="h-10 w-10 text-emerald-500/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0110 21a3.745 3.745 0 01-3.296-1.043 3.746 3.746 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+              </svg>
+              <span class="text-xs font-semibold text-ink">Everyone is settled</span>
+              <span class="text-[10px] text-mute">No transfers are needed at the moment!</span>
+            </div>
           </div>
         </div>
 
         <!-- Share Actions & Exports Card -->
-        <div class="rounded-lg border border-hairline bg-canvas p-6 shadow-vercel-sm">
-          <div class="border-b border-hairline pb-4 mb-6">
-            <h2 class="text-lg font-semibold tracking-tight text-ink">Share & Export</h2>
-            <p class="text-xs text-body mt-0.5">Share this split or export data client-side.</p>
+        <div class="vercel-card p-6">
+          <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-6">
+            <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742l-2.622 1.31M15.316 8.258l-2.62 1.312m1.442 8.598a3 3 0 11-6 0 3 3 0 016 0zm6-8c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm-12 8c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"></path>
+            </svg>
+            <div>
+              <h2 class="text-lg font-bold tracking-tight text-ink">Share & Export</h2>
+              <p class="text-xs text-body mt-0.5">Share this split or export data client-side.</p>
+            </div>
           </div>
 
           <!-- URL Alert Warning -->
-          <div id="url-limit-warning" class="hidden rounded-md bg-warning-soft border border-warning text-warning-deep p-3 text-xs mb-4">
+          <div id="url-limit-warning" class="hidden rounded-xl bg-warning-soft border border-warning/20 text-warning-deep p-3 text-xs mb-4">
             <strong>Warning:</strong> The link length exceeds safe limits (~2000 chars). It may not share correctly on some apps. Try keeping your expenses below 200 items.
           </div>
 
           <!-- Share Link Box -->
-          <div class="space-y-3">
+          <div class="space-y-4">
             <div>
               <label class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Shareable Link</label>
               <div class="flex gap-2">
@@ -328,13 +494,13 @@ import Layout from '../layouts/Layout.astro';
                   type="text" 
                   id="share-link-input" 
                   readonly 
-                  class="flex-grow h-10 px-3 rounded-md border border-hairline bg-canvas-soft-2 text-mute font-sans text-xs focus:ring-0 outline-none"
+                  class="flex-grow h-10 px-3 rounded-xl border border-hairline bg-canvas-soft-2 text-mute font-sans text-xs focus:ring-0 outline-none"
                   value=""
                 />
                 <button 
                   type="button" 
                   id="copy-link-btn" 
-                  class="inline-flex h-10 w-24 items-center justify-center rounded-md bg-primary text-xs font-semibold text-on-primary hover:bg-primary/90 transition-colors shadow-vercel-sm"
+                  class="inline-flex h-10 w-24 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-xs font-semibold text-white hover:opacity-95 transition-all shadow-md active:scale-95 cursor-pointer"
                 >
                   Copy
                 </button>
@@ -346,9 +512,8 @@ import Layout from '../layouts/Layout.astro';
               href="#" 
               id="whatsapp-share-btn"
               target="_blank"
-              class="w-full inline-flex h-10 items-center justify-center rounded-md border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-colors shadow-vercel-sm gap-2"
+              class="w-full inline-flex h-10 items-center justify-center rounded-xl border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
             >
-              <!-- WhatsApp green color replaced with vercel ink -->
               <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.115-2.905-6.99C16.559 1.875 14.09 .843 11.453.843c-5.441 0-9.865 4.422-9.869 9.866-.001 1.77.464 3.498 1.348 5.016L1.879 21.8l6.32-1.656-.552.31z"></path>
               </svg>
@@ -359,10 +524,9 @@ import Layout from '../layouts/Layout.astro';
             <button 
               type="button" 
               id="export-pdf-btn"
-              class="w-full inline-flex h-10 items-center justify-center rounded-md border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-colors shadow-vercel-sm gap-2"
+              class="w-full inline-flex h-10 items-center justify-center rounded-xl border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
             >
-              <!-- PDF Icon -->
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
               Export Summary PDF
@@ -370,12 +534,12 @@ import Layout from '../layouts/Layout.astro';
           </div>
 
           <!-- QR Code Area -->
-          <div class="mt-6 flex flex-col items-center justify-center border border-hairline rounded-md bg-canvas-soft p-4">
-            <span class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-3">Scan to Settle Up</span>
-            <div class="bg-white p-2 border border-hairline rounded-md shadow-vercel-sm">
+          <div class="mt-6 flex flex-col items-center justify-center border border-hairline rounded-xl bg-canvas-soft p-4">
+            <span class="block font-mono text-[9px] font-semibold text-mute uppercase tracking-wider mb-3">Scan to Settle Up</span>
+            <div class="bg-white p-2 border border-hairline rounded-xl shadow-sm">
               <canvas id="share-qr-canvas" class="h-[140px] w-[140px]"></canvas>
             </div>
-            <p class="text-[10px] text-mute mt-2.5 text-center font-mono">Any smartphone can scan this QR to load the group.</p>
+            <p class="text-[9px] text-mute mt-2.5 text-center font-mono">Any smartphone can scan this QR to load the group.</p>
           </div>
         </div>
 
@@ -385,19 +549,18 @@ import Layout from '../layouts/Layout.astro';
   </div>
 
   <!-- Toast Notification Container -->
-  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 </Layout>
 
 <script>
   // Dynamic typescript code bundled by Vite
-  import type { GroupState, Member, Expense, MemberSummary, Debt } from '../lib/types';
+  import type { GroupState, Member, Expense } from '../lib/types';
   import { calculateSplit } from '../lib/calc';
   import { 
     saveCurrentGroup, 
     loadCurrentGroup, 
     loadRecents, 
-    saveToRecents, 
-    clearCurrentGroup 
+    saveToRecents 
   } from '../lib/storage';
   import { 
     encodeStateToUrl, 
@@ -414,8 +577,8 @@ import Layout from '../layouts/Layout.astro';
   import { jsPDF } from 'jspdf';
 
   // Constants
-  const TRAVEL_CATEGORIES = ['flight', 'hotel', 'food', 'transport', 'activity', 'other'];
-  const SUBSCRIPTION_CATEGORIES = ['streaming', 'music', 'software', 'gaming', 'other'];
+  const TRAVEL_CATEGORIES = ['flight', 'hotel', 'food', 'transport', 'activity', 'groceries', 'drinks', 'shopping', 'parking', 'insurance', 'tickets', 'other'];
+  const SUBSCRIPTION_CATEGORIES = ['streaming', 'music', 'software', 'gaming', 'news', 'fitness', 'utilities', 'delivery', 'education', 'other'];
 
   // Global State
   let state: GroupState = {
@@ -426,6 +589,10 @@ import Layout from '../layouts/Layout.astro';
     expenses: [],
     mode: 'travel',
   };
+
+  // Undo memory
+  let lastDeletedExpense: Expense | null = null;
+  let lastTotalSpend = 0;
 
   // DOM Elements cache
   const elements = {
@@ -441,12 +608,14 @@ import Layout from '../layouts/Layout.astro';
     newMemberName: document.getElementById('new-member-name') as HTMLInputElement,
     memberValidationError: document.getElementById('member-validation-error') as HTMLSpanElement,
     membersListContainer: document.getElementById('members-list-container') as HTMLDivElement,
-    emptyMembersPlaceholder: document.getElementById('empty-members-placeholder') as HTMLParagraphElement,
+    emptyMembersPlaceholder: document.getElementById('empty-members-placeholder') as HTMLDivElement,
     
     expenseFormErrorSummary: document.getElementById('expense-form-error-summary') as HTMLDivElement,
     addExpenseForm: document.getElementById('add-expense-form') as HTMLFormElement,
     expenseTitle: document.getElementById('expense-title') as HTMLInputElement,
     expenseCategory: document.getElementById('expense-category') as HTMLSelectElement,
+    streamingService: document.getElementById('streaming-service') as HTMLSelectElement,
+    streamingServiceContainer: document.getElementById('streaming-service-container') as HTMLDivElement,
     expenseAmountSymbol: document.getElementById('expense-amount-symbol') as HTMLSpanElement,
     expenseAmount: document.getElementById('expense-amount') as HTMLInputElement,
     expensePaidBy: document.getElementById('expense-paid-by') as HTMLSelectElement,
@@ -461,7 +630,7 @@ import Layout from '../layouts/Layout.astro';
     
     expensesCountBadge: document.getElementById('expenses-count-badge') as HTMLSpanElement,
     expensesListContainer: document.getElementById('expenses-list-container') as HTMLDivElement,
-    emptyExpensesPlaceholder: document.getElementById('empty-expenses-placeholder') as HTMLParagraphElement,
+    emptyExpensesPlaceholder: document.getElementById('empty-expenses-placeholder') as HTMLDivElement,
     
     summaryTotalSpend: document.getElementById('summary-total-spend') as HTMLSpanElement,
     topPayerBadgeContainer: document.getElementById('top-payer-badge-container') as HTMLDivElement,
@@ -469,7 +638,7 @@ import Layout from '../layouts/Layout.astro';
     summaryTableBody: document.getElementById('summary-table-body') as HTMLTableSectionElement,
     
     settlementsListContainer: document.getElementById('settlements-list-container') as HTMLDivElement,
-    emptySettlementsPlaceholder: document.getElementById('empty-settlements-placeholder') as HTMLParagraphElement,
+    emptySettlementsPlaceholder: document.getElementById('empty-settlements-placeholder') as HTMLDivElement,
     
     urlLimitWarning: document.getElementById('url-limit-warning') as HTMLDivElement,
     shareLinkInput: document.getElementById('share-link-input') as HTMLInputElement,
@@ -478,50 +647,171 @@ import Layout from '../layouts/Layout.astro';
     exportPdfBtn: document.getElementById('export-pdf-btn') as HTMLButtonElement,
     shareQrCanvas: document.getElementById('share-qr-canvas') as HTMLCanvasElement,
     toastContainer: document.getElementById('toast-container') as HTMLDivElement,
+
+    // Mobile specific sheet handles
+    mobileAddExpenseFab: document.getElementById('mobile-add-expense-fab') as HTMLButtonElement,
+    mobileSheetBackdrop: document.getElementById('mobile-sheet-backdrop') as HTMLDivElement,
+    addExpenseCardContainer: document.getElementById('add-expense-card-container') as HTMLDivElement,
+    closeMobileSheetBtn: document.getElementById('close-mobile-sheet-btn') as HTMLButtonElement,
   };
 
-  // Toast Functionality
+  // Avatar Hash Color Generator
+  function getAvatarColor(name: string) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const colors = [
+      { bg: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20', avatar: 'bg-indigo-500 text-white' },
+      { bg: 'bg-violet-500/10 text-violet-500 border-violet-500/20', avatar: 'bg-violet-500 text-white' },
+      { bg: 'bg-pink-500/10 text-pink-500 border-pink-500/20', avatar: 'bg-pink-500 text-white' },
+      { bg: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20', avatar: 'bg-emerald-500 text-white' },
+      { bg: 'bg-amber-500/10 text-amber-500 border-amber-500/20', avatar: 'bg-amber-500 text-white' },
+      { bg: 'bg-sky-500/10 text-sky-500 border-sky-500/20', avatar: 'bg-sky-500 text-white' },
+      { bg: 'bg-rose-500/10 text-rose-500 border-rose-500/20', avatar: 'bg-rose-500 text-white' },
+      { bg: 'bg-teal-500/10 text-teal-500 border-teal-500/20', avatar: 'bg-teal-500 text-white' },
+    ];
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  }
+
+  // Category Icons Helper
+  function getCategoryIcon(category: string) {
+    const icons: Record<string, string> = {
+      flight: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
+      hotel: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>`,
+      food: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>`,
+      transport: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>`,
+      activity: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      groceries: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
+      drinks: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 5V4a1 1 0 00-1-1H7a1 1 0 00-1 1v1m12 0a2 2 0 01-2 2h-8a2 2 0 01-2-2m12 0V9a4 4 0 01-4 4h-4a4 4 0 01-4-4V5m12 0H6.002M12 13v6m0 0H9m3 0h3"/></svg>`,
+      shopping: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>`,
+      parking: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15V9h2.5a2.5 2.5 0 010 5H9.002m0 0h5M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>`,
+      insurance: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`,
+      tickets: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 100 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 100-4V7a2 2 0 00-2-2H5z"/></svg>`,
+      streaming: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>`,
+      music: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>`,
+      software: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>`,
+      gaming: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 100 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 100-4V7a2 2 0 00-2-2H5z"/></svg>`,
+      news: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-2m2 14h-2m-2-14H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4m-4 4h4"/></svg>`,
+      fitness: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+      utilities: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
+      delivery: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`,
+      education: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`,
+      
+      // Streaming sub-category icons
+      netflix: `<span class="text-lg select-none">🍿</span>`,
+      prime: `<span class="text-lg select-none">📦</span>`,
+      disney: `<span class="text-lg select-none">🏰</span>`,
+      hulu: `<span class="text-lg select-none">🟢</span>`,
+      hbo: `<span class="text-lg select-none">🟣</span>`,
+      apple: `<span class="text-lg select-none">🍎</span>`,
+      peacock: `<span class="text-lg select-none">🦚</span>`,
+      paramount: `<span class="text-lg select-none">🏔️</span>`,
+      youtube: `<span class="text-lg select-none">🔴</span>`,
+      crunchyroll: `<span class="text-lg select-none">🍥</span>`,
+
+      other: `<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>`,
+    };
+    return icons[category] || icons['other'];
+  }
+
+  // Count up value animator
+  function animateValue(obj: HTMLElement, start: number, end: number, duration: number) {
+    let startTimestamp: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const currentValue = start + progress * (end - start);
+      obj.innerHTML = state.currency + currentValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  // Toast notifications
   function showToast(message: string, type: 'info' | 'error' = 'info') {
     const toast = document.createElement('div');
-    toast.className = `pointer-events-auto flex items-center justify-between rounded-md bg-canvas border ${type === 'error' ? 'border-error text-error-deep' : 'border-hairline text-ink'} px-4 py-3 shadow-vercel-lg min-w-[280px] transition-all duration-300 opacity-0 translate-y-2`;
+    toast.className = `pointer-events-auto flex items-center justify-between rounded-xl bg-canvas border ${type === 'error' ? 'border-error text-error-deep' : 'border-hairline text-ink'} px-4 py-3 shadow-lg min-w-[280px] transition-all duration-300 opacity-0 translate-y-2`;
     toast.innerHTML = `
-      <span class="text-xs font-medium">${message}</span>
-      <button class="text-mute hover:text-ink text-xs font-mono ml-4" onclick="this.parentElement.remove()">×</button>
+      <span class="text-xs font-semibold">${message}</span>
+      <button class="text-mute hover:text-ink text-xs font-mono ml-4 cursor-pointer" onclick="this.parentElement.remove()">✕</button>
     `;
     elements.toastContainer.appendChild(toast);
     
-    // Animate in
     setTimeout(() => {
       toast.classList.remove('opacity-0', 'translate-y-2');
       toast.classList.add('opacity-100', 'translate-y-0');
     }, 10);
     
-    // Auto dismiss
     setTimeout(() => {
-      toast.classList.remove('opacity-100', 'translate-y-0');
-      toast.classList.add('opacity-0', 'translate-y-2');
-      setTimeout(() => toast.remove(), 300);
+      if (toast.parentElement) {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }
     }, 4000);
+  }
+
+  // Undo Toast Notifications
+  function showUndoToast(message: string) {
+    const toast = document.createElement('div');
+    toast.className = `pointer-events-auto flex items-center justify-between rounded-xl bg-canvas border border-hairline text-ink px-4 py-3 shadow-lg min-w-[320px] transition-all duration-300 opacity-0 translate-y-2`;
+    toast.innerHTML = `
+      <div class="flex flex-col gap-0.5">
+        <span class="text-xs font-semibold">${message}</span>
+        <span class="text-[10px] text-mute">You can undo this action.</span>
+      </div>
+      <div class="flex items-center gap-3 ml-4">
+        <button id="undo-delete-btn" class="text-xs font-bold text-indigo-500 hover:text-indigo-600 transition-colors uppercase tracking-wider cursor-pointer">Undo</button>
+        <button class="text-mute hover:text-ink text-xs font-mono cursor-pointer" onclick="this.parentElement.parentElement.remove()">✕</button>
+      </div>
+    `;
+    elements.toastContainer.appendChild(toast);
+    
+    const undoBtn = toast.querySelector('#undo-delete-btn')!;
+    undoBtn.addEventListener('click', () => {
+      if (lastDeletedExpense) {
+        state.expenses.push(lastDeletedExpense);
+        saveCurrentGroup(state);
+        populateRecentsDropdown();
+        renderAll();
+        showToast(`Restored expense "${lastDeletedExpense.title}".`);
+        toast.remove();
+        lastDeletedExpense = null;
+      }
+    });
+    
+    setTimeout(() => {
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+    }, 10);
+    
+    setTimeout(() => {
+      if (toast.parentElement) {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, 6000);
   }
 
   // Load state and run updates
   function init() {
-    // 1. Try URL parameters first
     const urlState = decodeStateFromUrl(window.location.href);
     
     if (urlState) {
       state = urlState;
       saveCurrentGroup(state);
       showToast('Loaded group from share link.');
-      // Remove query parameters to keep address bar tidy
       window.history.replaceState({}, document.title, window.location.pathname);
     } else {
-      // 2. Try localStorage
       const localState = loadCurrentGroup();
       if (localState) {
         state = localState;
       } else {
-        // Default seed state
         state = {
           id: Math.random().toString(36).substring(2, 9),
           name: 'My Trip',
@@ -538,7 +828,6 @@ import Layout from '../layouts/Layout.astro';
       }
     }
 
-    // Hydrate form and controls
     elements.groupName.value = state.name;
     elements.currencySelector.value = state.currency;
     elements.expenseAmountSymbol.textContent = state.currency;
@@ -546,14 +835,41 @@ import Layout from '../layouts/Layout.astro';
     populateCategories();
     populateRecentsDropdown();
     
-    // Initial Render
+    // Bind Mobile Specific sheet handlers
+    if (elements.mobileAddExpenseFab) {
+      elements.mobileAddExpenseFab.addEventListener('click', openMobileSheet);
+    }
+    if (elements.closeMobileSheetBtn) {
+      elements.closeMobileSheetBtn.addEventListener('click', closeMobileSheet);
+    }
+    if (elements.mobileSheetBackdrop) {
+      elements.mobileSheetBackdrop.addEventListener('click', closeMobileSheet);
+    }
+
     renderAll();
+  }
+
+  function openMobileSheet() {
+    elements.mobileSheetBackdrop.classList.remove('hidden');
+    setTimeout(() => {
+      elements.mobileSheetBackdrop.classList.remove('opacity-0');
+      elements.addExpenseCardContainer.classList.remove('translate-y-full');
+      elements.addExpenseCardContainer.classList.add('translate-y-0');
+    }, 10);
+  }
+
+  function closeMobileSheet() {
+    elements.addExpenseCardContainer.classList.remove('translate-y-0');
+    elements.addExpenseCardContainer.classList.add('translate-y-full');
+    elements.mobileSheetBackdrop.classList.add('opacity-0');
+    setTimeout(() => {
+      elements.mobileSheetBackdrop.classList.add('hidden');
+    }, 300);
   }
 
   function populateRecentsDropdown() {
     const recents = loadRecents();
-    // Reset but keep first option
-    elements.recentSplitsSelector.innerHTML = '<option value="">Load Recent Split...</option>';
+    elements.recentSplitsSelector.innerHTML = '<option value="">Load Recent...</option>';
     
     if (recents.length === 0) {
       elements.recentSplitsSelector.classList.add('hidden');
@@ -573,11 +889,11 @@ import Layout from '../layouts/Layout.astro';
   function updateModeUI(mode: 'travel' | 'subscription') {
     state.mode = mode;
     if (mode === 'travel') {
-      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-ink bg-canvas shadow-vercel-sm";
-      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-body hover:text-ink";
+      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-ink bg-canvas shadow-sm cursor-pointer";
+      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-body hover:text-ink cursor-pointer";
     } else {
-      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-ink bg-canvas shadow-vercel-sm";
-      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded transition-colors text-body hover:text-ink";
+      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-ink bg-canvas shadow-sm cursor-pointer";
+      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-body hover:text-ink cursor-pointer";
     }
   }
 
@@ -590,6 +906,15 @@ import Layout from '../layouts/Layout.astro';
       opt.textContent = category.charAt(0).toUpperCase() + category.slice(1);
       elements.expenseCategory.appendChild(opt);
     }
+    toggleStreamingServiceVisibility();
+  }
+
+  function toggleStreamingServiceVisibility() {
+    if (state.mode === 'subscription' && elements.expenseCategory.value === 'streaming') {
+      elements.streamingServiceContainer.classList.remove('hidden');
+    } else {
+      elements.streamingServiceContainer.classList.add('hidden');
+    }
   }
 
   // Render Functions
@@ -601,36 +926,44 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function renderMembers() {
-    // Member count
     elements.membersCountBadge.textContent = `${state.members.length} / ${LIMITS.MAX_MEMBERS}`;
-
-    // Clear chips
     elements.membersListContainer.innerHTML = '';
     
     if (state.members.length === 0) {
       elements.membersListContainer.appendChild(elements.emptyMembersPlaceholder);
     } else {
       for (const m of state.members) {
+        const colors = getAvatarColor(m.name);
         const chip = document.createElement('div');
-        chip.className = 'inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-3 py-1 text-sm text-ink shadow-vercel-sm animate-fade-in';
+        chip.className = `inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium shadow-sm transition-all duration-200 hover:scale-102 ${colors.bg} animate-fade-in`;
         
+        const avatar = document.createElement('span');
+        avatar.className = `flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold uppercase tracking-wider ${colors.avatar}`;
+        avatar.textContent = m.name.charAt(0);
+        chip.appendChild(avatar);
+
         const nameSpan = document.createElement('span');
         nameSpan.textContent = m.name;
         chip.appendChild(nameSpan);
         
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
-        removeBtn.className = 'text-mute hover:text-error transition-colors ml-1 font-semibold text-xs';
+        removeBtn.className = 'text-mute hover:text-error transition-colors ml-1 font-bold text-xs p-0.5 cursor-pointer';
         removeBtn.textContent = '×';
         removeBtn.setAttribute('aria-label', `Remove ${m.name}`);
-        removeBtn.addEventListener('click', () => removeMember(m.id));
+        
+        removeBtn.addEventListener('click', () => {
+          chip.classList.add('scale-90', 'opacity-0');
+          setTimeout(() => {
+            removeMember(m.id);
+          }, 200);
+        });
         chip.appendChild(removeBtn);
         
         elements.membersListContainer.appendChild(chip);
       }
     }
 
-    // Refresh inputs depending on members
     updatePaidByDropdown();
     updateSplitAmongCheckboxes();
   }
@@ -646,7 +979,6 @@ import Layout from '../layouts/Layout.astro';
       elements.expensePaidBy.appendChild(opt);
     }
     
-    // Retain selected paidBy if they still exist
     if (state.members.some(m => m.id === currentValue)) {
       elements.expensePaidBy.value = currentValue;
     }
@@ -668,15 +1000,14 @@ import Layout from '../layouts/Layout.astro';
 
     for (const m of state.members) {
       const label = document.createElement('label');
-      label.className = 'flex items-center gap-2 text-xs text-ink cursor-pointer hover:bg-canvas p-1 rounded transition-colors';
+      label.className = 'flex items-center gap-2 text-xs text-ink cursor-pointer hover:bg-canvas p-1 rounded-lg transition-colors';
       
       const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.value = m.id;
       cb.name = 'split-member';
-      // Default to checked if it was checked before, or if it's a fresh render
       cb.checked = checkedValues.size === 0 ? true : checkedValues.has(m.id);
-      cb.className = 'rounded border-hairline-strong text-primary focus:ring-primary h-3.5 w-3.5';
+      cb.className = 'rounded border-hairline-strong text-primary focus:ring-primary h-4 w-4 cursor-pointer';
       
       const span = document.createElement('span');
       span.textContent = m.name;
@@ -689,7 +1020,6 @@ import Layout from '../layouts/Layout.astro';
 
   function renderExpenses() {
     elements.expensesCountBadge.textContent = `${state.expenses.length} / ${LIMITS.MAX_EXPENSES}`;
-    
     elements.expensesListContainer.innerHTML = '';
     
     if (state.expenses.length === 0) {
@@ -697,71 +1027,130 @@ import Layout from '../layouts/Layout.astro';
       return;
     }
 
-    // Sort expenses in reverse chronological (newest first)
     const sortedExpenses = [...state.expenses].reverse();
 
     for (const exp of sortedExpenses) {
       const payerName = state.members.find(m => m.id === exp.paidBy)?.name || 'Deleted Member';
       
-      const div = document.createElement('div');
-      div.className = 'py-4 flex items-center justify-between gap-4 border-b border-hairline last:border-b-0';
+      const container = document.createElement('div');
+      container.className = 'w-full overflow-x-auto scrollbar-none snap-x snap-mandatory flex border-b border-hairline last:border-b-0 group/exp relative animate-fade-in';
       
-      // Left Part: Title & Details
+      // Main content block
+      const mainContent = document.createElement('div');
+      mainContent.className = 'w-full shrink-0 snap-start py-4 pr-3 flex items-center justify-between gap-4 bg-canvas/10';
+      
+      // Left part: Category Icon + Description details
       const leftPart = document.createElement('div');
-      leftPart.className = 'flex flex-col min-w-0';
+      leftPart.className = 'flex items-center gap-3.5 min-w-0';
+      
+      const iconContainer = document.createElement('div');
+      iconContainer.className = 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500 dark:bg-indigo-500/20 border border-indigo-500/10';
+      iconContainer.innerHTML = getCategoryIcon(exp.subCategory || exp.category);
+      
+      const textDetails = document.createElement('div');
+      textDetails.className = 'flex flex-col min-w-0';
       
       const titleSpan = document.createElement('span');
-      titleSpan.className = 'text-sm font-medium text-ink truncate max-w-[200px] sm:max-w-[300px]';
+      titleSpan.className = 'text-sm font-semibold text-ink truncate max-w-[180px] sm:max-w-[300px]';
       titleSpan.textContent = exp.title;
-      leftPart.appendChild(titleSpan);
       
-      const descDiv = document.createElement('div');
-      descDiv.className = 'flex flex-wrap items-center gap-1.5 text-xs text-mute mt-1';
+      const subText = document.createElement('div');
+      subText.className = 'flex flex-wrap items-center gap-1.5 text-xs text-mute mt-1';
       
-      const catBadge = document.createElement('span');
-      catBadge.className = 'inline-flex items-center rounded-full bg-canvas-soft border border-hairline px-1.5 py-0.5 text-[10px] font-mono capitalize';
-      catBadge.textContent = exp.category;
+      const catText = exp.subCategory ? `${exp.category} (${exp.subCategory})` : exp.category;
+      subText.innerHTML = `<span class="inline-flex items-center rounded-full bg-canvas-soft-2 border border-hairline px-2 py-0.5 text-[10px] font-semibold text-body capitalize">${catText}</span> <span>Paid by <strong class="text-body font-semibold">${payerName}</strong></span> <span class="text-[9px]">•</span> <span>Split with ${exp.splitAmong.length} ${exp.splitAmong.length === 1 ? 'person' : 'people'}</span>`;
       
-      const detailsText = document.createElement('span');
-      detailsText.textContent = `Paid by ${payerName} • Split with ${exp.splitAmong.length} people`;
+      textDetails.appendChild(titleSpan);
+      textDetails.appendChild(subText);
       
-      descDiv.appendChild(catBadge);
-      descDiv.appendChild(detailsText);
-      leftPart.appendChild(descDiv);
+      leftPart.appendChild(iconContainer);
+      leftPart.appendChild(textDetails);
       
-      // Right Part: Amount & Delete Button
+      // Right part: amount and delete button
       const rightPart = document.createElement('div');
       rightPart.className = 'flex items-center gap-4 flex-shrink-0';
       
       const amountSpan = document.createElement('span');
-      amountSpan.className = 'text-sm font-semibold text-ink font-mono';
+      amountSpan.className = 'text-sm font-bold text-ink font-mono tabular-nums';
       amountSpan.textContent = `${state.currency}${exp.amount.toFixed(2)}`;
       
       const deleteBtn = document.createElement('button');
       deleteBtn.type = 'button';
-      deleteBtn.className = 'text-mute hover:text-error transition-colors p-1.5 rounded-full hover:bg-error-soft/30';
+      deleteBtn.className = 'text-mute hover:text-error transition-all p-2 rounded-full hover:bg-error-soft/30 cursor-pointer active:scale-90';
       deleteBtn.innerHTML = `
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
         </svg>
       `;
       deleteBtn.setAttribute('aria-label', `Delete expense ${exp.title}`);
-      deleteBtn.addEventListener('click', () => removeExpense(exp.id));
+      
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        container.classList.add('translate-x-20', 'opacity-0');
+        setTimeout(() => {
+          removeExpense(exp.id);
+        }, 200);
+      });
       
       rightPart.appendChild(amountSpan);
       rightPart.appendChild(deleteBtn);
       
-      div.appendChild(leftPart);
-      div.appendChild(rightPart);
-      elements.expensesListContainer.appendChild(div);
+      mainContent.appendChild(leftPart);
+      mainContent.appendChild(rightPart);
+
+      // Swipe delete button (Mobile view only)
+      const swipeDeleteBtn = document.createElement('button');
+      swipeDeleteBtn.type = 'button';
+      swipeDeleteBtn.className = 'w-20 shrink-0 snap-end bg-rose-500 text-white font-semibold text-xs flex items-center justify-center gap-1 active:bg-rose-600 transition-colors cursor-pointer';
+      swipeDeleteBtn.innerHTML = `
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+        Delete
+      `;
+      swipeDeleteBtn.addEventListener('click', () => {
+        container.classList.add('translate-x-20', 'opacity-0');
+        setTimeout(() => {
+          removeExpense(exp.id);
+        }, 200);
+      });
+
+      container.appendChild(mainContent);
+      container.appendChild(swipeDeleteBtn);
+
+      // Add split breakdown tooltip on hover
+      const tooltip = document.createElement('div');
+      tooltip.className = 'absolute right-12 top-10 z-20 hidden group-hover/exp:block bg-canvas border border-hairline p-3 rounded-xl shadow-lg text-xs min-w-[200px] animate-fade-in pointer-events-none';
+      tooltip.innerHTML = `<div class="font-semibold mb-1 text-ink border-b border-hairline pb-1">Split Breakdown</div>`;
+
+      const breakdownList = document.createElement('div');
+      breakdownList.className = 'space-y-1 text-body mt-1.5 font-mono';
+
+      const perPersonAmount = exp.amount / exp.splitAmong.length;
+      for (const mId of exp.splitAmong) {
+        const mName = state.members.find(m => m.id === mId)?.name || 'Unknown';
+        const row = document.createElement('div');
+        row.className = 'flex justify-between gap-4';
+        row.innerHTML = `<span>${mName}</span><span class="tabular-nums">${state.currency}${perPersonAmount.toFixed(2)}</span>`;
+        breakdownList.appendChild(row);
+      }
+      tooltip.appendChild(breakdownList);
+      container.appendChild(tooltip);
+      
+      elements.expensesListContainer.appendChild(container);
     }
   }
 
   function renderCalculations() {
     const summary = calculateSplit(state);
     
-    // Total spend
-    elements.summaryTotalSpend.textContent = `${state.currency}${summary.totalSpend.toFixed(2)}`;
+    // Total spend with count-up animation
+    if (lastTotalSpend !== summary.totalSpend) {
+      animateValue(elements.summaryTotalSpend, lastTotalSpend, summary.totalSpend, 300);
+      lastTotalSpend = summary.totalSpend;
+    } else {
+      elements.summaryTotalSpend.textContent = `${state.currency}${summary.totalSpend.toFixed(2)}`;
+    }
     
     // Find top payer
     let maxPaid = 0;
@@ -800,28 +1189,28 @@ import Layout from '../layouts/Layout.astro';
         tr.className = 'border-b border-hairline hover:bg-canvas-soft-2 transition-colors';
         
         const nameTd = document.createElement('td');
-        nameTd.className = 'p-3 text-sm text-ink font-medium';
+        nameTd.className = 'p-3 text-sm text-ink font-semibold';
         nameTd.textContent = m.name;
         
         const paidTd = document.createElement('td');
-        paidTd.className = 'p-3 text-sm text-body text-right font-mono';
+        paidTd.className = 'p-3 text-sm text-body text-right font-mono tabular-nums';
         paidTd.textContent = `${state.currency}${ms.paid.toFixed(2)}`;
         
         const owedTd = document.createElement('td');
-        owedTd.className = 'p-3 text-sm text-body text-right font-mono';
+        owedTd.className = 'p-3 text-sm text-body text-right font-mono tabular-nums';
         owedTd.textContent = `${state.currency}${ms.owed.toFixed(2)}`;
         
         const netTd = document.createElement('td');
-        netTd.className = 'p-3 text-sm text-right font-mono font-semibold';
+        netTd.className = 'p-3 text-sm text-right font-mono font-semibold tabular-nums';
         
         if (ms.net > 0.01) {
-          netTd.className += ' text-link'; // Positive balance
+          netTd.className += ' text-emerald-500'; // Receiver
           netTd.textContent = `+${state.currency}${ms.net.toFixed(2)}`;
         } else if (ms.net < -0.01) {
-          netTd.className += ' text-error-deep'; // Negative balance
+          netTd.className += ' text-rose-500'; // Payer
           netTd.textContent = `-${state.currency}${Math.abs(ms.net).toFixed(2)}`;
         } else {
-          netTd.className += ' text-mute'; // Settled balance
+          netTd.className += ' text-mute';
           netTd.textContent = `${state.currency}0.00`;
         }
         
@@ -844,33 +1233,61 @@ import Layout from '../layouts/Layout.astro';
         const toName = state.members.find(m => m.id === item.to)?.name || 'Deleted Member';
         
         const card = document.createElement('div');
-        card.className = 'rounded-md border border-hairline bg-canvas p-3 shadow-vercel-sm flex items-center justify-between gap-4';
+        card.className = 'rounded-xl border border-hairline bg-canvas p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md animate-fade-in';
         
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'text-xs text-ink flex items-center gap-1.5 flex-wrap';
-        
-        const fromSpan = document.createElement('span');
-        fromSpan.className = 'font-semibold';
-        fromSpan.textContent = fromName;
-        
-        const textSpan = document.createElement('span');
-        textSpan.className = 'text-mute';
-        textSpan.textContent = 'owes';
-        
-        const toSpan = document.createElement('span');
-        toSpan.className = 'font-semibold';
-        toSpan.textContent = toName;
-        
-        infoDiv.appendChild(fromSpan);
-        infoDiv.appendChild(textSpan);
-        infoDiv.appendChild(toSpan);
-        
-        const amountDiv = document.createElement('div');
-        amountDiv.className = 'text-sm font-bold text-link font-mono';
-        amountDiv.textContent = `${state.currency}${item.amount.toFixed(2)}`;
-        
-        card.appendChild(infoDiv);
-        card.appendChild(amountDiv);
+        // Left Side: Flow Info
+        const flowDiv = document.createElement('div');
+        flowDiv.className = 'flex items-center gap-3 flex-wrap';
+
+        const fromColors = getAvatarColor(fromName);
+        const toColors = getAvatarColor(toName);
+
+        // Payer avatar + name
+        const payerWrapper = document.createElement('div');
+        payerWrapper.className = 'flex items-center gap-2';
+        payerWrapper.innerHTML = `
+          <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold uppercase tracking-wider ${fromColors.avatar}">${fromName.charAt(0)}</span>
+          <span class="font-semibold text-rose-500 dark:text-rose-400 text-sm">${fromName}</span>
+        `;
+
+        // Flow arrow
+        const arrowSpan = document.createElement('span');
+        arrowSpan.className = 'text-xs text-mute flex items-center gap-1 font-bold animate-pulse px-1';
+        arrowSpan.innerHTML = 'pays <svg class="h-4.5 w-4.5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>';
+
+        // Receiver avatar + name
+        const receiverWrapper = document.createElement('div');
+        receiverWrapper.className = 'flex items-center gap-2';
+        receiverWrapper.innerHTML = `
+          <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold uppercase tracking-wider ${toColors.avatar}">${toName.charAt(0)}</span>
+          <span class="font-semibold text-emerald-500 dark:text-emerald-400 text-sm">${toName}</span>
+        `;
+
+        flowDiv.appendChild(payerWrapper);
+        flowDiv.appendChild(arrowSpan);
+        flowDiv.appendChild(receiverWrapper);
+
+        // Right Side: Amount and Action
+        const rightDiv = document.createElement('div');
+        rightDiv.className = 'flex items-center justify-between sm:justify-start gap-4 w-full sm:w-auto ml-auto sm:ml-0';
+
+        const amountSpan = document.createElement('span');
+        amountSpan.className = 'text-base font-bold text-indigo-500 dark:text-indigo-400 font-mono tabular-nums';
+        amountSpan.textContent = `${state.currency}${item.amount.toFixed(2)}`;
+
+        const settleBtn = document.createElement('button');
+        settleBtn.type = 'button';
+        settleBtn.className = 'text-xs font-semibold border border-indigo-500/20 hover:border-indigo-500/30 rounded-full px-3 py-1.5 bg-indigo-500/5 hover:bg-indigo-500/10 text-indigo-500 transition-all active:scale-95 cursor-pointer';
+        settleBtn.textContent = 'Mark Settle';
+        settleBtn.addEventListener('click', () => {
+          settleDebt(item.from, item.to, item.amount);
+        });
+
+        rightDiv.appendChild(amountSpan);
+        rightDiv.appendChild(settleBtn);
+
+        card.appendChild(flowDiv);
+        card.appendChild(rightDiv);
         elements.settlementsListContainer.appendChild(card);
       }
     }
@@ -878,27 +1295,21 @@ import Layout from '../layouts/Layout.astro';
 
   function renderShareActions() {
     const url = encodeStateToUrl(state);
-    
-    // Set text input value
     elements.shareLinkInput.value = url;
-    
-    // Setup WhatsApp button url
     elements.whatsappShareBtn.href = getWhatsAppShareUrl(url, state.name);
 
-    // URL limit warning check
     if (isUrlLengthWarning(url)) {
       elements.urlLimitWarning.classList.remove('hidden');
     } else {
       elements.urlLimitWarning.classList.add('hidden');
     }
 
-    // QR Code rendering
     try {
       QRCode.toCanvas(elements.shareQrCanvas, url, {
         width: 140,
         margin: 1,
         color: {
-          dark: '#171717',
+          dark: '#18181b',
           light: '#ffffff'
         }
       }, (err) => {
@@ -907,6 +1318,27 @@ import Layout from '../layouts/Layout.astro';
     } catch (e) {
       console.error('QR code render crash guard:', e);
     }
+  }
+
+  // Settle Debt Action
+  function settleDebt(fromId: string, toId: string, amount: number) {
+    const fromName = state.members.find(m => m.id === fromId)?.name || 'Member';
+    const toName = state.members.find(m => m.id === toId)?.name || 'Member';
+    
+    const newExpense: Expense = {
+      id: 'e_' + Math.random().toString(36).substring(2, 9),
+      title: `Settle: ${fromName} → ${toName}`,
+      category: 'other',
+      amount: amount,
+      paidBy: fromId,
+      splitAmong: [toId]
+    };
+
+    state.expenses.push(newExpense);
+    saveCurrentGroup(state);
+    populateRecentsDropdown();
+    renderAll();
+    showToast(`Logged settlement: ${fromName} paid ${toName} ${state.currency}${amount.toFixed(2)}.`);
   }
 
   // Mutator Actions
@@ -937,12 +1369,8 @@ import Layout from '../layouts/Layout.astro';
     const member = state.members.find(m => m.id === id);
     if (!member) return;
 
-    // Filter members
     state.members = state.members.filter(m => m.id !== id);
 
-    // Filter payments - remove deleted member from splitAmong of all expenses.
-    // If expense.paidBy was deleted member, we leave it (will show as Deleted Member) or delete the expense?
-    // Let's filter expenses: if paidBy is deleted, delete the expense. If splitAmong contained deleted member, remove them from splitAmong list.
     state.expenses = state.expenses.map(e => {
       const cleanSplit = e.splitAmong.filter(mId => mId !== id);
       return {
@@ -958,14 +1386,17 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function removeExpense(id: string) {
-    const exp = state.expenses.find(e => e.id === id);
-    if (!exp) return;
+    const expIndex = state.expenses.findIndex(e => e.id === id);
+    if (expIndex === -1) return;
+    
+    const exp = state.expenses[expIndex];
+    lastDeletedExpense = exp;
     
     state.expenses = state.expenses.filter(e => e.id !== id);
     saveCurrentGroup(state);
     populateRecentsDropdown();
     renderAll();
-    showToast(`Deleted expense "${exp.title}".`);
+    showUndoToast(`Deleted expense "${exp.title}".`);
   }
 
   // Event Bindings
@@ -1007,7 +1438,6 @@ import Layout from '../layouts/Layout.astro';
     const found = recents.find(r => r.id === selectedId);
     if (found) {
       state = found;
-      // Update form configurations
       elements.groupName.value = state.name;
       elements.currencySelector.value = state.currency;
       elements.expenseAmountSymbol.textContent = state.currency;
@@ -1019,6 +1449,8 @@ import Layout from '../layouts/Layout.astro';
       showToast(`Loaded split "${state.name}".`);
     }
   });
+
+  elements.expenseCategory.addEventListener('change', toggleStreamingServiceVisibility);
 
   elements.resetGroupBtn.addEventListener('click', () => {
     if (!confirm('Are you sure you want to completely reset this group split? All current expenses and members will be cleared.')) {
@@ -1045,14 +1477,14 @@ import Layout from '../layouts/Layout.astro';
     showToast('Group reset successfully.');
   });
 
-  // Add Member
+  // Add Member Form
   elements.addMemberForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const val = elements.newMemberName.value;
     addMember(val);
   });
 
-  // Select/Deselect checkboxes
+  // Checkbox Selectors
   elements.splitSelectAll.addEventListener('click', () => {
     const checkboxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((cb: any) => cb.checked = true);
@@ -1063,12 +1495,13 @@ import Layout from '../layouts/Layout.astro';
     checkboxes.forEach((cb: any) => cb.checked = false);
   });
 
-  // Add Expense Form Validation and Save
+  // Add Expense
   elements.addExpenseForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
     const title = elements.expenseTitle.value;
     const category = elements.expenseCategory.value;
+    const subCategory = category === 'streaming' ? elements.streamingService.value : undefined;
     const amount = parseFloat(elements.expenseAmount.value);
     const paidBy = elements.expensePaidBy.value;
     
@@ -1078,10 +1511,8 @@ import Layout from '../layouts/Layout.astro';
       if (cb.checked) splitAmong.push(cb.value);
     });
 
-    // Run validations
     const errors = validateExpenseData(title, amount, paidBy, splitAmong, state.expenses.length);
 
-    // Clear previous errors
     elements.errExpenseTitle.classList.add('hidden');
     elements.errExpenseAmount.classList.add('hidden');
     elements.errExpensePaidBy.classList.add('hidden');
@@ -1112,11 +1543,11 @@ import Layout from '../layouts/Layout.astro';
       return;
     }
 
-    // Save Expense
     const newExpense: Expense = {
       id: 'e_' + Math.random().toString(36).substring(2, 9),
       title: title.trim(),
       category,
+      subCategory,
       amount,
       paidBy,
       splitAmong
@@ -1126,16 +1557,20 @@ import Layout from '../layouts/Layout.astro';
     saveCurrentGroup(state);
     populateRecentsDropdown();
     
-    // Reset Form
+    // Reset Form inputs
     elements.expenseTitle.value = '';
     elements.expenseAmount.value = '';
-    // Retain paidBy and checkboxes to make logging multiple expenses easier
     
+    // Close sheet on mobile
+    if (window.innerWidth < 768) {
+      closeMobileSheet();
+    }
+
     renderAll();
     showToast(`Logged expense "${newExpense.title}".`);
   });
 
-  // Copy shareable link
+  // Copy URL
   elements.copyLinkBtn.addEventListener('click', () => {
     const url = elements.shareLinkInput.value;
     navigator.clipboard.writeText(url).then(() => {
@@ -1145,7 +1580,7 @@ import Layout from '../layouts/Layout.astro';
         elements.copyLinkBtn.textContent = 'Copy';
       }, 2000);
     }).catch(err => {
-      console.error('Failed to copy to clipboard:', err);
+      console.error('Failed to copy link:', err);
       showToast('Failed to copy link.', 'error');
     });
   });
@@ -1161,18 +1596,15 @@ import Layout from '../layouts/Layout.astro';
       const summary = calculateSplit(state);
       const doc = new jsPDF();
       
-      // Theme settings (Gray & Black)
       const primaryColor = [23, 23, 23];
       const grayColor = [136, 136, 136];
       const lightLineColor = 230;
 
-      // Title
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(22);
       doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
       doc.text('SplitWhat Expense Summary', 20, 20);
 
-      // Meta Info
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(10);
       doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
@@ -1180,11 +1612,9 @@ import Layout from '../layouts/Layout.astro';
       doc.text(`Date: ${new Date().toLocaleDateString()} • Mode: ${state.mode === 'travel' ? 'Travel' : 'Subscription'}`, 20, 35);
       doc.text(`Total Spend: ${state.currency}${summary.totalSpend.toFixed(2)}`, 20, 40);
 
-      // Divider Line
       doc.setDrawColor(lightLineColor);
       doc.line(20, 45, 190, 45);
 
-      // Table Header: Balance Sheet
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(14);
       doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
@@ -1198,7 +1628,6 @@ import Layout from '../layouts/Layout.astro';
       doc.text('Net Balance', 150, 65, { align: 'right' });
       doc.line(20, 67, 190, 67);
 
-      // Table Body
       let yOffset = 75;
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
@@ -1222,11 +1651,9 @@ import Layout from '../layouts/Layout.astro';
         yOffset += 8;
       }
 
-      // Divider Line
       doc.line(20, yOffset, 190, yOffset);
       yOffset += 12;
 
-      // Settlement Path Header
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(14);
       doc.text('Settlement Directions', 20, yOffset);
