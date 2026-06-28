@@ -112,15 +112,26 @@ export function sanitizeGroupState(state: any): GroupState | null {
             e.amount > 0 &&
             expenses.length < LIMITS.MAX_EXPENSES
           ) {
+             let cleanShares: Record<string, number> | undefined = undefined;
+             if (e.shares && typeof e.shares === 'object') {
+               cleanShares = {};
+               for (const [key, val] of Object.entries(e.shares)) {
+                 if (typeof val === 'number' && !isNaN(val)) {
+                   cleanShares[key] = Math.round(val * 100) / 100;
+                 }
+               }
+             }
+
              expenses.push({
-              id: e.id,
-              title: e.title.trim().substring(0, LIMITS.MAX_EXPENSE_TITLE_LENGTH),
-              category: typeof e.category === 'string' ? e.category : 'other',
-              subCategory: typeof e.subCategory === 'string' ? e.subCategory : undefined,
-              amount: Math.round(e.amount * 100) / 100,
-              paidBy: e.paidBy,
-              splitAmong: cleanSplitAmong,
-            });
+               id: e.id,
+               title: e.title.trim().substring(0, LIMITS.MAX_EXPENSE_TITLE_LENGTH),
+               category: typeof e.category === 'string' ? e.category : 'other',
+               subCategory: typeof e.subCategory === 'string' ? e.subCategory : undefined,
+               amount: Math.round(e.amount * 100) / 100,
+               paidBy: e.paidBy,
+               splitAmong: cleanSplitAmong,
+               shares: cleanShares,
+             });
           }
         }
       }

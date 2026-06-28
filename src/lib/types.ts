@@ -13,6 +13,7 @@ export interface Expense {
   amount: number;
   paidBy: string; // Member.id
   splitAmong: string[]; // Member.id[]
+  shares?: Record<string, number>; // Member.id -> specific amount
 }
 
 export interface GroupState {

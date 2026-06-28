@@ -35,8 +35,10 @@ export function calculateSplit(state: GroupState): SplitSummary {
     memberSummaries[expense.paidBy].paid += amount;
 
     // Debit the split targets
-    const share = amount / activeSplitAmong.length;
     for (const targetId of activeSplitAmong) {
+      const share = (expense.shares && typeof expense.shares[targetId] === 'number')
+        ? expense.shares[targetId]
+        : amount / activeSplitAmong.length;
       memberSummaries[targetId].owed += share;
     }
   }

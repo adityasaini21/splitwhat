@@ -116,7 +116,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <!-- Reset & Quick Load -->
-        <div class="flex items-center justify-end gap-3 h-10">
+        <div class="flex flex-wrap items-center justify-end gap-3 min-h-10">
           <select 
             id="recent-splits-selector" 
             class="hidden md:block h-10 px-3 rounded-xl border border-hairline bg-canvas text-body font-sans text-xs focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none max-w-[180px] transition-all cursor-pointer"
@@ -129,6 +129,14 @@ import Layout from '../layouts/Layout.astro';
             class="inline-flex h-10 items-center justify-center rounded-xl border border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-all cursor-pointer active:scale-95 shadow-sm"
           >
             Reset Group
+          </button>
+          <button 
+            type="button" 
+            id="clear-all-memory-btn"
+            class="inline-flex h-10 items-center justify-center rounded-xl border border-error bg-error text-white dark:bg-red-950 dark:border-error px-4 text-xs font-semibold hover:opacity-95 transition-all cursor-pointer active:scale-95 shadow-sm"
+            title="Clear all stored splits, history, and current data from this device"
+          >
+            Clear All Memory
           </button>
         </div>
       </div>
@@ -330,9 +338,30 @@ import Layout from '../layouts/Layout.astro';
               </div>
 
               <!-- Split Among Checkboxes -->
-              <div class="space-y-2">
+              <div class="space-y-3">
                 <div class="flex items-center justify-between">
                   <span class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider">Split Among</span>
+                  <!-- Split Type Selector -->
+                  <div class="inline-flex rounded-lg bg-canvas-soft border border-hairline p-0.5" id="split-type-toggle-container">
+                    <button 
+                      type="button" 
+                      id="split-type-equal-btn"
+                      class="text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer"
+                    >
+                      Equally
+                    </button>
+                    <button 
+                      type="button" 
+                      id="split-type-unequal-btn"
+                      class="text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer"
+                    >
+                      Unequally
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] text-mute">
+                  <span>Select who to split with:</span>
                   <div class="flex gap-2">
                     <button type="button" id="split-select-all" class="text-xs text-indigo-500 hover:text-indigo-600 font-semibold transition-colors cursor-pointer">Select All</button>
                     <span class="text-xs text-mute font-mono">•</span>
@@ -340,10 +369,11 @@ import Layout from '../layouts/Layout.astro';
                   </div>
                 </div>
 
-                <div id="split-members-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-xl border border-hairline bg-canvas-soft-2 max-h-[140px] overflow-y-auto">
+                <div id="split-members-checkboxes" class="flex flex-col gap-2 p-3 rounded-xl border border-hairline bg-canvas-soft-2 max-h-[220px] overflow-y-auto">
                   <!-- Checkboxes populated dynamically -->
                   <p id="split-empty-placeholder" class="col-span-full text-xs text-mute italic text-center py-2">Add group members to split with.</p>
                 </div>
+                <span id="unequal-status-text" class="hidden text-xs font-semibold mt-1.5 block"></span>
                 <span id="err-expense-split-among" class="hidden text-[10px] text-error mt-1.5 block"></span>
               </div>
 
@@ -560,7 +590,8 @@ import Layout from '../layouts/Layout.astro';
     saveCurrentGroup, 
     loadCurrentGroup, 
     loadRecents, 
-    saveToRecents 
+    saveToRecents,
+    clearAll
   } from '../lib/storage';
   import { 
     encodeStateToUrl, 
@@ -593,6 +624,7 @@ import Layout from '../layouts/Layout.astro';
   // Undo memory
   let lastDeletedExpense: Expense | null = null;
   let lastTotalSpend = 0;
+  let currentSplitType: 'equal' | 'unequal' = 'equal';
 
   // DOM Elements cache
   const elements = {
@@ -602,6 +634,7 @@ import Layout from '../layouts/Layout.astro';
     modeSubscriptionBtn: document.getElementById('mode-subscription-btn') as HTMLButtonElement,
     recentSplitsSelector: document.getElementById('recent-splits-selector') as HTMLSelectElement,
     resetGroupBtn: document.getElementById('reset-group-btn') as HTMLButtonElement,
+    clearAllMemoryBtn: document.getElementById('clear-all-memory-btn') as HTMLButtonElement,
     
     membersCountBadge: document.getElementById('members-count-badge') as HTMLSpanElement,
     addMemberForm: document.getElementById('add-member-form') as HTMLFormElement,
@@ -622,6 +655,9 @@ import Layout from '../layouts/Layout.astro';
     splitMembersCheckboxes: document.getElementById('split-members-checkboxes') as HTMLDivElement,
     splitSelectAll: document.getElementById('split-select-all') as HTMLButtonElement,
     splitDeselectAll: document.getElementById('split-deselect-all') as HTMLButtonElement,
+    splitTypeEqualBtn: document.getElementById('split-type-equal-btn') as HTMLButtonElement,
+    splitTypeUnequalBtn: document.getElementById('split-type-unequal-btn') as HTMLButtonElement,
+    unequalStatusText: document.getElementById('unequal-status-text') as HTMLSpanElement,
     
     errExpenseTitle: document.getElementById('err-expense-title') as HTMLSpanElement,
     errExpenseAmount: document.getElementById('err-expense-amount') as HTMLSpanElement,
@@ -984,11 +1020,52 @@ import Layout from '../layouts/Layout.astro';
     }
   }
 
+  function updateUnequalSplitStatus() {
+    if (currentSplitType !== 'unequal') {
+      elements.unequalStatusText.classList.add('hidden');
+      return;
+    }
+
+    elements.unequalStatusText.classList.remove('hidden');
+    const totalAmount = parseFloat(elements.expenseAmount.value) || 0;
+    
+    let sum = 0;
+    const inputs = elements.splitMembersCheckboxes.querySelectorAll('input[type="number"]');
+    inputs.forEach((input: any) => {
+      const parentRow = input.closest('.split-member-row');
+      const checkbox = parentRow ? parentRow.querySelector('input[type="checkbox"]') : null;
+      if (checkbox && checkbox.checked) {
+        sum += parseFloat(input.value) || 0;
+      }
+    });
+
+    const difference = totalAmount - sum;
+    if (Math.abs(difference) < 0.01) {
+      elements.unequalStatusText.className = 'text-xs text-emerald-500 font-semibold mt-1.5 block';
+      elements.unequalStatusText.textContent = `Sum matches total! 🎉`;
+    } else if (difference > 0) {
+      elements.unequalStatusText.className = 'text-xs text-amber-500 font-semibold mt-1.5 block';
+      elements.unequalStatusText.textContent = `Sum is short by ${state.currency}${difference.toFixed(2)}`;
+    } else {
+      elements.unequalStatusText.className = 'text-xs text-error font-semibold mt-1.5 block';
+      elements.unequalStatusText.textContent = `Sum exceeds total by ${state.currency}${Math.abs(difference).toFixed(2)}`;
+    }
+  }
+
   function updateSplitAmongCheckboxes() {
     const checkedValues = new Set<string>();
-    const checkBoxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
-    checkBoxes.forEach((cb: any) => {
-      if (cb.checked) checkedValues.add(cb.value);
+    const shareValues: Record<string, string> = {};
+    
+    const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
+    rows.forEach((row: any) => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      const numInput = row.querySelector('input[type="number"]');
+      if (cb && cb.checked) {
+        checkedValues.add(cb.value);
+        if (numInput) {
+          shareValues[cb.value] = numInput.value;
+        }
+      }
     });
 
     elements.splitMembersCheckboxes.innerHTML = '';
@@ -999,8 +1076,11 @@ import Layout from '../layouts/Layout.astro';
     }
 
     for (const m of state.members) {
+      const row = document.createElement('div');
+      row.className = 'split-member-row flex items-center justify-between p-2 rounded-xl bg-canvas border border-hairline/40 transition-colors hover:bg-canvas-soft-2/50 w-full';
+      
       const label = document.createElement('label');
-      label.className = 'flex items-center gap-2 text-xs text-ink cursor-pointer hover:bg-canvas p-1 rounded-lg transition-colors';
+      label.className = 'flex items-center gap-2 text-xs text-ink cursor-pointer select-none py-1 flex-grow';
       
       const cb = document.createElement('input');
       cb.type = 'checkbox';
@@ -1014,7 +1094,49 @@ import Layout from '../layouts/Layout.astro';
       
       label.appendChild(cb);
       label.appendChild(span);
-      elements.splitMembersCheckboxes.appendChild(label);
+      row.appendChild(label);
+      
+      // Share input container
+      const inputContainer = document.createElement('div');
+      inputContainer.className = `relative w-24 ml-2 transition-all duration-200 ${currentSplitType === 'unequal' ? '' : 'hidden'}`;
+      
+      const symbolSpan = document.createElement('span');
+      symbolSpan.className = 'absolute left-2.5 top-1.5 text-mute text-[10px] font-mono';
+      symbolSpan.textContent = state.currency;
+      
+      const numInput = document.createElement('input');
+      numInput.type = 'number';
+      numInput.step = '0.01';
+      numInput.min = '0';
+      numInput.placeholder = '0.00';
+      numInput.value = shareValues[m.id] || '';
+      numInput.className = 'w-full h-7 pl-5 pr-2 rounded-lg border border-hairline bg-canvas text-ink text-xs font-mono outline-none focus:border-indigo-500 text-right';
+      
+      // Handle disabling input if checkbox is unchecked
+      if (!cb.checked) {
+        numInput.disabled = true;
+        numInput.classList.add('opacity-40');
+      }
+
+      cb.addEventListener('change', () => {
+        if (cb.checked) {
+          numInput.disabled = false;
+          numInput.classList.remove('opacity-40');
+        } else {
+          numInput.disabled = true;
+          numInput.classList.add('opacity-40');
+          numInput.value = '';
+        }
+        updateUnequalSplitStatus();
+      });
+
+      numInput.addEventListener('input', updateUnequalSplitStatus);
+
+      inputContainer.appendChild(symbolSpan);
+      inputContainer.appendChild(numInput);
+      row.appendChild(inputContainer);
+
+      elements.splitMembersCheckboxes.appendChild(row);
     }
   }
 
@@ -1033,11 +1155,11 @@ import Layout from '../layouts/Layout.astro';
       const payerName = state.members.find(m => m.id === exp.paidBy)?.name || 'Deleted Member';
       
       const container = document.createElement('div');
-      container.className = 'w-full overflow-x-auto scrollbar-none snap-x snap-mandatory flex border-b border-hairline last:border-b-0 group/exp relative animate-fade-in';
+      container.className = 'w-full border-b border-hairline last:border-b-0 group/exp animate-fade-in relative';
       
       // Main content block
       const mainContent = document.createElement('div');
-      mainContent.className = 'w-full shrink-0 snap-start py-4 pr-3 flex items-center justify-between gap-4 bg-canvas/10';
+      mainContent.className = 'w-full py-4 px-3 flex items-center justify-between gap-4 hover:bg-canvas-soft/40 dark:hover:bg-canvas-soft/10 rounded-xl transition-all cursor-pointer select-none';
       
       // Left part: Category Icon + Description details
       const leftPart = document.createElement('div');
@@ -1066,76 +1188,98 @@ import Layout from '../layouts/Layout.astro';
       leftPart.appendChild(iconContainer);
       leftPart.appendChild(textDetails);
       
-      // Right part: amount and delete button
+      // Right part: amount and chevron
       const rightPart = document.createElement('div');
-      rightPart.className = 'flex items-center gap-4 flex-shrink-0';
+      rightPart.className = 'flex items-center gap-3 flex-shrink-0';
       
       const amountSpan = document.createElement('span');
       amountSpan.className = 'text-sm font-bold text-ink font-mono tabular-nums';
       amountSpan.textContent = `${state.currency}${exp.amount.toFixed(2)}`;
       
-      const deleteBtn = document.createElement('button');
-      deleteBtn.type = 'button';
-      deleteBtn.className = 'text-mute hover:text-error transition-all p-2 rounded-full hover:bg-error-soft/30 cursor-pointer active:scale-90';
-      deleteBtn.innerHTML = `
-        <svg class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-        </svg>
-      `;
-      deleteBtn.setAttribute('aria-label', `Delete expense ${exp.title}`);
-      
-      deleteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        container.classList.add('translate-x-20', 'opacity-0');
-        setTimeout(() => {
-          removeExpense(exp.id);
-        }, 200);
-      });
+      const chevron = document.createElement('div');
+      chevron.className = 'text-mute transition-transform duration-200 transform';
+      chevron.innerHTML = `<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`;
       
       rightPart.appendChild(amountSpan);
-      rightPart.appendChild(deleteBtn);
+      rightPart.appendChild(chevron);
       
       mainContent.appendChild(leftPart);
       mainContent.appendChild(rightPart);
-
-      // Swipe delete button (Mobile view only)
-      const swipeDeleteBtn = document.createElement('button');
-      swipeDeleteBtn.type = 'button';
-      swipeDeleteBtn.className = 'w-20 shrink-0 snap-end bg-rose-500 text-white font-semibold text-xs flex items-center justify-center gap-1 active:bg-rose-600 transition-colors cursor-pointer';
-      swipeDeleteBtn.innerHTML = `
+      
+      // Details panel
+      const detailsPanel = document.createElement('div');
+      detailsPanel.className = 'hidden px-4 pb-4 pt-3 border-t border-hairline bg-canvas-soft-2/10 dark:bg-zinc-950/20 rounded-b-xl space-y-4 animate-fade-in';
+      
+      const isUnequal = exp.shares && Object.keys(exp.shares).length > 0;
+      
+      const breakdownTitle = document.createElement('div');
+      breakdownTitle.className = 'flex items-center justify-between border-b border-hairline pb-2';
+      breakdownTitle.innerHTML = `
+        <span class="text-[9px] font-bold font-mono text-mute uppercase tracking-widest">Split Breakdown ${isUnequal ? '(Unequal)' : '(Equal)'}</span>
+        <span class="text-[9px] font-bold font-mono text-mute uppercase tracking-widest">${isUnequal ? 'Custom Share' : `Share (${state.currency}${(exp.amount / exp.splitAmong.length).toFixed(2)}/ea)`}</span>
+      `;
+      detailsPanel.appendChild(breakdownTitle);
+      
+      const breakdownList = document.createElement('div');
+      breakdownList.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+      
+      for (const mId of exp.splitAmong) {
+        const mName = state.members.find(m => m.id === mId)?.name || 'Unknown';
+        const colors = getAvatarColor(mName);
+        const personShare = (exp.shares && typeof exp.shares[mId] === 'number')
+          ? exp.shares[mId]
+          : exp.amount / exp.splitAmong.length;
+        
+        const itemCard = document.createElement('div');
+        itemCard.className = 'flex items-center gap-2 bg-canvas border border-hairline p-2.5 rounded-xl text-xs shadow-sm hover:border-hairline-strong transition-all';
+        itemCard.innerHTML = `
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold uppercase tracking-wider ${colors.avatar}">${mName.charAt(0)}</span>
+          <span class="font-semibold text-body truncate max-w-[80px]">${mName}</span>
+          <span class="font-mono text-ink ml-auto font-bold tabular-nums">${state.currency}${personShare.toFixed(2)}</span>
+        `;
+        breakdownList.appendChild(itemCard);
+      }
+      detailsPanel.appendChild(breakdownList);
+      
+      // Delete button row
+      const panelFooter = document.createElement('div');
+      panelFooter.className = 'flex justify-end pt-2 border-t border-hairline';
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'inline-flex h-9 items-center justify-center rounded-lg border border-error/20 hover:border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-all cursor-pointer active:scale-95 shadow-sm gap-1.5';
+      deleteBtn.innerHTML = `
         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
         </svg>
-        Delete
+        Delete Expense
       `;
-      swipeDeleteBtn.addEventListener('click', () => {
-        container.classList.add('translate-x-20', 'opacity-0');
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        container.classList.add('scale-95', 'opacity-0');
         setTimeout(() => {
           removeExpense(exp.id);
         }, 200);
       });
-
+      panelFooter.appendChild(deleteBtn);
+      detailsPanel.appendChild(panelFooter);
+      
       container.appendChild(mainContent);
-      container.appendChild(swipeDeleteBtn);
-
-      // Add split breakdown tooltip on hover
-      const tooltip = document.createElement('div');
-      tooltip.className = 'absolute right-12 top-10 z-20 hidden group-hover/exp:block bg-canvas border border-hairline p-3 rounded-xl shadow-lg text-xs min-w-[200px] animate-fade-in pointer-events-none';
-      tooltip.innerHTML = `<div class="font-semibold mb-1 text-ink border-b border-hairline pb-1">Split Breakdown</div>`;
-
-      const breakdownList = document.createElement('div');
-      breakdownList.className = 'space-y-1 text-body mt-1.5 font-mono';
-
-      const perPersonAmount = exp.amount / exp.splitAmong.length;
-      for (const mId of exp.splitAmong) {
-        const mName = state.members.find(m => m.id === mId)?.name || 'Unknown';
-        const row = document.createElement('div');
-        row.className = 'flex justify-between gap-4';
-        row.innerHTML = `<span>${mName}</span><span class="tabular-nums">${state.currency}${perPersonAmount.toFixed(2)}</span>`;
-        breakdownList.appendChild(row);
-      }
-      tooltip.appendChild(breakdownList);
-      container.appendChild(tooltip);
+      container.appendChild(detailsPanel);
+      
+      // Click toggle handler
+      mainContent.addEventListener('click', () => {
+        const isCollapsed = detailsPanel.classList.contains('hidden');
+        if (isCollapsed) {
+          detailsPanel.classList.remove('hidden');
+          chevron.classList.add('rotate-180');
+        } else {
+          detailsPanel.classList.add('hidden');
+          chevron.classList.remove('rotate-180');
+        }
+      });
+      
+      elements.expensesListContainer.appendChild(container);
       
       elements.expensesListContainer.appendChild(container);
     }
@@ -1477,6 +1621,34 @@ import Layout from '../layouts/Layout.astro';
     showToast('Group reset successfully.');
   });
 
+  elements.clearAllMemoryBtn.addEventListener('click', () => {
+    if (!confirm('WARNING: This will completely delete all current groups, all recent history, and all stored data from this device. This action CANNOT be undone. Are you sure you want to proceed?')) {
+      return;
+    }
+
+    clearAll();
+    
+    // Reset state to initial clean state
+    state = {
+      id: Math.random().toString(36).substring(2, 9),
+      name: 'My Trip',
+      currency: '$',
+      members: [],
+      expenses: [],
+      mode: 'travel',
+    };
+    
+    elements.groupName.value = state.name;
+    elements.currencySelector.value = state.currency;
+    elements.expenseAmountSymbol.textContent = state.currency;
+    updateModeUI(state.mode);
+    populateCategories();
+    populateRecentsDropdown();
+    
+    renderAll();
+    showToast('All stored splits and history cleared.');
+  });
+
   // Add Member Form
   elements.addMemberForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1486,13 +1658,90 @@ import Layout from '../layouts/Layout.astro';
 
   // Checkbox Selectors
   elements.splitSelectAll.addEventListener('click', () => {
-    const checkboxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach((cb: any) => cb.checked = true);
+    const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
+    rows.forEach((row: any) => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      const numInput = row.querySelector('input[type="number"]');
+      if (cb) {
+        cb.checked = true;
+        if (numInput) {
+          numInput.disabled = false;
+          numInput.classList.remove('opacity-40');
+        }
+      }
+    });
+    updateUnequalSplitStatus();
   });
 
   elements.splitDeselectAll.addEventListener('click', () => {
-    const checkboxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach((cb: any) => cb.checked = false);
+    const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
+    rows.forEach((row: any) => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      const numInput = row.querySelector('input[type="number"]');
+      if (cb) {
+        cb.checked = false;
+        if (numInput) {
+          numInput.disabled = true;
+          numInput.classList.add('opacity-40');
+          numInput.value = '';
+        }
+      }
+    });
+    updateUnequalSplitStatus();
+  });
+
+  // Split type toggles
+  elements.splitTypeEqualBtn.addEventListener('click', () => {
+    if (currentSplitType === 'equal') return;
+    currentSplitType = 'equal';
+    
+    // Toggle active state classes
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
+    
+    // Hide inputs
+    const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
+    rows.forEach((row: any) => {
+      const container = row.querySelector('div.relative');
+      if (container) container.classList.add('hidden');
+    });
+    
+    updateUnequalSplitStatus();
+  });
+
+  elements.splitTypeUnequalBtn.addEventListener('click', () => {
+    if (currentSplitType === 'unequal') return;
+    currentSplitType = 'unequal';
+    
+    // Toggle active state classes
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
+    
+    // Show inputs
+    const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
+    rows.forEach((row: any) => {
+      const container = row.querySelector('div.relative');
+      if (container) {
+        container.classList.remove('hidden');
+        // Enable input if checkbox is checked
+        const cb = row.querySelector('input[type="checkbox"]');
+        const numInput = container.querySelector('input[type="number"]');
+        if (cb && numInput) {
+          numInput.disabled = !cb.checked;
+          if (!cb.checked) {
+            numInput.classList.add('opacity-40');
+          } else {
+            numInput.classList.remove('opacity-40');
+          }
+        }
+      }
+    });
+    
+    updateUnequalSplitStatus();
+  });
+
+  elements.expenseAmount.addEventListener('input', () => {
+    updateUnequalSplitStatus();
   });
 
   // Add Expense
@@ -1506,9 +1755,22 @@ import Layout from '../layouts/Layout.astro';
     const paidBy = elements.expensePaidBy.value;
     
     const splitAmong: string[] = [];
-    const checkBoxes = elements.splitMembersCheckboxes.querySelectorAll('input[type="checkbox"]');
-    checkBoxes.forEach((cb: any) => {
-      if (cb.checked) splitAmong.push(cb.value);
+    const shares: Record<string, number> = {};
+    
+    const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
+    let shareSum = 0;
+    
+    rows.forEach((row: any) => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      if (cb && cb.checked) {
+        splitAmong.push(cb.value);
+        if (currentSplitType === 'unequal') {
+          const numInput = row.querySelector('input[type="number"]');
+          const val = parseFloat(numInput?.value || '0') || 0;
+          shares[cb.value] = val;
+          shareSum += val;
+        }
+      }
     });
 
     const errors = validateExpenseData(title, amount, paidBy, splitAmong, state.expenses.length);
@@ -1543,6 +1805,16 @@ import Layout from '../layouts/Layout.astro';
       return;
     }
 
+    if (currentSplitType === 'unequal') {
+      const difference = Math.abs(amount - shareSum);
+      if (difference >= 0.01) {
+        elements.errExpenseSplitAmong.textContent = `The sum of shares (${state.currency}${shareSum.toFixed(2)}) must equal the total amount (${state.currency}${amount.toFixed(2)}).`;
+        elements.errExpenseSplitAmong.classList.remove('hidden');
+        elements.expenseFormErrorSummary.classList.remove('hidden');
+        return;
+      }
+    }
+
     const newExpense: Expense = {
       id: 'e_' + Math.random().toString(36).substring(2, 9),
       title: title.trim(),
@@ -1550,7 +1822,8 @@ import Layout from '../layouts/Layout.astro';
       subCategory,
       amount,
       paidBy,
-      splitAmong
+      splitAmong,
+      shares: currentSplitType === 'unequal' ? shares : undefined
     };
 
     state.expenses.push(newExpense);
@@ -1560,6 +1833,12 @@ import Layout from '../layouts/Layout.astro';
     // Reset Form inputs
     elements.expenseTitle.value = '';
     elements.expenseAmount.value = '';
+    
+    // Reset split type toggle
+    currentSplitType = 'equal';
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
+    elements.unequalStatusText.classList.add('hidden');
     
     // Close sheet on mobile
     if (window.innerWidth < 768) {
