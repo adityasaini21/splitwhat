@@ -626,6 +626,7 @@ import Layout from '../layouts/Layout.astro';
   let lastTotalSpend = 0;
   let currentSplitType: 'equal' | 'unequal' = 'equal';
   let isReadOnly = false;
+  let totalSpendAnimFrameId: number | null = null;
 
   // DOM Elements cache
   const elements = {
@@ -755,6 +756,10 @@ import Layout from '../layouts/Layout.astro';
 
   // Count up value animator
   function animateValue(obj: HTMLElement, start: number, end: number, duration: number) {
+    if (totalSpendAnimFrameId !== null) {
+      cancelAnimationFrame(totalSpendAnimFrameId);
+    }
+    
     let startTimestamp: number | null = null;
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -762,10 +767,12 @@ import Layout from '../layouts/Layout.astro';
       const currentValue = start + progress * (end - start);
       obj.innerHTML = state.currency + currentValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (progress < 1) {
-        window.requestAnimationFrame(step);
+        totalSpendAnimFrameId = window.requestAnimationFrame(step);
+      } else {
+        totalSpendAnimFrameId = null;
       }
     };
-    window.requestAnimationFrame(step);
+    totalSpendAnimFrameId = window.requestAnimationFrame(step);
   }
 
   // Toast notifications
@@ -891,6 +898,12 @@ import Layout from '../layouts/Layout.astro';
     }
 
     renderAll();
+
+    const pendingToast = sessionStorage.getItem('toast_message');
+    if (pendingToast) {
+      showToast(pendingToast);
+      sessionStorage.removeItem('toast_message');
+    }
   }
 
   function loadDefaultState() {
@@ -1317,11 +1330,16 @@ import Layout from '../layouts/Layout.astro';
     const summary = calculateSplit(state);
     
     // Total spend with count-up animation
+    if (totalSpendAnimFrameId !== null) {
+      cancelAnimationFrame(totalSpendAnimFrameId);
+      totalSpendAnimFrameId = null;
+    }
+
     if (lastTotalSpend !== summary.totalSpend) {
       animateValue(elements.summaryTotalSpend, lastTotalSpend, summary.totalSpend, 300);
       lastTotalSpend = summary.totalSpend;
     } else {
-      elements.summaryTotalSpend.textContent = `${state.currency}${summary.totalSpend.toFixed(2)}`;
+      elements.summaryTotalSpend.innerHTML = state.currency + summary.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
     
     // Find top payer
@@ -1664,6 +1682,10 @@ import Layout from '../layouts/Layout.astro';
       mode: 'travel',
     };
     
+    // Reset state track variables
+    lastTotalSpend = 0;
+    lastDeletedExpense = null;
+    
     elements.groupName.value = state.name;
     elements.currencySelector.value = state.currency;
     elements.expenseAmountSymbol.textContent = state.currency;
@@ -1677,8 +1699,8 @@ import Layout from '../layouts/Layout.astro';
     elements.unequalStatusText.classList.add('hidden');
     
     saveCurrentGroup(state);
-    renderAll();
-    showToast('Group reset successfully.');
+    sessionStorage.setItem('toast_message', 'Group reset successfully.');
+    window.location.reload();
   });
 
   elements.clearAllMemoryBtn.addEventListener('click', () => {
@@ -1689,7 +1711,7 @@ import Layout from '../layouts/Layout.astro';
 
     clearAll();
     
-    // Reset state to initial clean state
+    // Reset state to initial clean state and save
     state = {
       id: Math.random().toString(36).substring(2, 9),
       name: 'My Trip',
@@ -1698,16 +1720,10 @@ import Layout from '../layouts/Layout.astro';
       expenses: [],
       mode: 'travel',
     };
+    saveCurrentGroup(state);
     
-    elements.groupName.value = state.name;
-    elements.currencySelector.value = state.currency;
-    elements.expenseAmountSymbol.textContent = state.currency;
-    updateModeUI(state.mode);
-    populateCategories();
-    populateRecentsDropdown();
-    
-    renderAll();
-    showToast('All stored splits and history cleared.');
+    sessionStorage.setItem('toast_message', 'All stored splits and history cleared.');
+    window.location.reload();
   });
 
   // Add Member Form
