@@ -625,6 +625,7 @@ import Layout from '../layouts/Layout.astro';
   let lastDeletedExpense: Expense | null = null;
   let lastTotalSpend = 0;
   let currentSplitType: 'equal' | 'unequal' = 'equal';
+  let isReadOnly = false;
 
   // DOM Elements cache
   const elements = {
@@ -836,31 +837,38 @@ import Layout from '../layouts/Layout.astro';
 
   // Load state and run updates
   function init() {
-    const urlState = decodeStateFromUrl(window.location.href);
+    const params = new URLSearchParams(window.location.search);
+    const hasShareParam = params.has('g');
     
-    if (urlState) {
-      state = urlState;
-      saveCurrentGroup(state);
-      showToast('Loaded group from share link.');
-      window.history.replaceState({}, document.title, window.location.pathname);
+    if (hasShareParam) {
+      const urlState = decodeStateFromUrl(window.location.href);
+      if (urlState) {
+        state = urlState;
+        isReadOnly = true;
+        
+        // Lock UI controls to read-only mode
+        if (elements.groupName) elements.groupName.disabled = true;
+        if (elements.currencySelector) elements.currencySelector.disabled = true;
+        if (elements.modeTravelBtn) elements.modeTravelBtn.classList.add('pointer-events-none', 'opacity-50');
+        if (elements.modeSubscriptionBtn) elements.modeSubscriptionBtn.classList.add('pointer-events-none', 'opacity-50');
+        
+        if (elements.resetGroupBtn) elements.resetGroupBtn.classList.add('hidden');
+        if (elements.clearAllMemoryBtn) elements.clearAllMemoryBtn.classList.add('hidden');
+        if (elements.addMemberForm) elements.addMemberForm.classList.add('hidden');
+        if (elements.addExpenseCardContainer) elements.addExpenseCardContainer.classList.add('hidden');
+        if (elements.mobileAddExpenseFab) elements.mobileAddExpenseFab.classList.add('hidden');
+        
+        showToast('Viewing shared read-only group split.');
+      } else {
+        showToast('Failed to load group from link. Starting clean...', 'error');
+        loadDefaultState();
+      }
     } else {
       const localState = loadCurrentGroup();
       if (localState) {
         state = localState;
       } else {
-        state = {
-          id: Math.random().toString(36).substring(2, 9),
-          name: 'My Trip',
-          currency: '$',
-          members: [
-            { id: 'm1', name: 'Alex' },
-            { id: 'm2', name: 'Sam' },
-            { id: 'm3', name: 'Jo' }
-          ],
-          expenses: [],
-          mode: 'travel',
-        };
-        saveCurrentGroup(state);
+        loadDefaultState();
       }
     }
 
@@ -883,6 +891,22 @@ import Layout from '../layouts/Layout.astro';
     }
 
     renderAll();
+  }
+
+  function loadDefaultState() {
+    state = {
+      id: Math.random().toString(36).substring(2, 9),
+      name: 'My Trip',
+      currency: '$',
+      members: [
+        { id: 'm1', name: 'Alex' },
+        { id: 'm2', name: 'Sam' },
+        { id: 'm3', name: 'Jo' }
+      ],
+      expenses: [],
+      mode: 'travel',
+    };
+    saveCurrentGroup(state);
   }
 
   function openMobileSheet() {
@@ -982,19 +1006,21 @@ import Layout from '../layouts/Layout.astro';
         nameSpan.textContent = m.name;
         chip.appendChild(nameSpan);
         
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'text-mute hover:text-error transition-colors ml-1 font-bold text-xs p-0.5 cursor-pointer';
-        removeBtn.textContent = '×';
-        removeBtn.setAttribute('aria-label', `Remove ${m.name}`);
-        
-        removeBtn.addEventListener('click', () => {
-          chip.classList.add('scale-90', 'opacity-0');
-          setTimeout(() => {
-            removeMember(m.id);
-          }, 200);
-        });
-        chip.appendChild(removeBtn);
+        if (!isReadOnly) {
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'text-mute hover:text-error transition-colors ml-1 font-bold text-xs p-0.5 cursor-pointer';
+          removeBtn.textContent = '×';
+          removeBtn.setAttribute('aria-label', `Remove ${m.name}`);
+          
+          removeBtn.addEventListener('click', () => {
+            chip.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => {
+              removeMember(m.id);
+            }, 200);
+          });
+          chip.appendChild(removeBtn);
+        }
         
         elements.membersListContainer.appendChild(chip);
       }
@@ -1242,27 +1268,29 @@ import Layout from '../layouts/Layout.astro';
       detailsPanel.appendChild(breakdownList);
       
       // Delete button row
-      const panelFooter = document.createElement('div');
-      panelFooter.className = 'flex justify-end pt-2 border-t border-hairline';
-      
-      const deleteBtn = document.createElement('button');
-      deleteBtn.type = 'button';
-      deleteBtn.className = 'inline-flex h-9 items-center justify-center rounded-lg border border-error/20 hover:border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-all cursor-pointer active:scale-95 shadow-sm gap-1.5';
-      deleteBtn.innerHTML = `
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-        </svg>
-        Delete Expense
-      `;
-      deleteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        container.classList.add('scale-95', 'opacity-0');
-        setTimeout(() => {
-          removeExpense(exp.id);
-        }, 200);
-      });
-      panelFooter.appendChild(deleteBtn);
-      detailsPanel.appendChild(panelFooter);
+      if (!isReadOnly) {
+        const panelFooter = document.createElement('div');
+        panelFooter.className = 'flex justify-end pt-2 border-t border-hairline';
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'inline-flex h-9 items-center justify-center rounded-lg border border-error/20 hover:border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-all cursor-pointer active:scale-95 shadow-sm gap-1.5';
+        deleteBtn.innerHTML = `
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+          Delete Expense
+        `;
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          container.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => {
+            removeExpense(exp.id);
+          }, 200);
+        });
+        panelFooter.appendChild(deleteBtn);
+        detailsPanel.appendChild(panelFooter);
+      }
       
       container.appendChild(mainContent);
       container.appendChild(detailsPanel);
@@ -1428,7 +1456,9 @@ import Layout from '../layouts/Layout.astro';
         });
 
         rightDiv.appendChild(amountSpan);
-        rightDiv.appendChild(settleBtn);
+        if (!isReadOnly) {
+          rightDiv.appendChild(settleBtn);
+        }
 
         card.appendChild(flowDiv);
         card.appendChild(rightDiv);
@@ -1466,6 +1496,7 @@ import Layout from '../layouts/Layout.astro';
 
   // Settle Debt Action
   function settleDebt(fromId: string, toId: string, amount: number) {
+    if (isReadOnly) return;
     const fromName = state.members.find(m => m.id === fromId)?.name || 'Member';
     const toName = state.members.find(m => m.id === toId)?.name || 'Member';
     
@@ -1487,6 +1518,7 @@ import Layout from '../layouts/Layout.astro';
 
   // Mutator Actions
   function addMember(name: string) {
+    if (isReadOnly) return;
     const err = validateMemberName(name, state.members);
     if (err) {
       elements.memberValidationError.textContent = err;
@@ -1510,6 +1542,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function removeMember(id: string) {
+    if (isReadOnly) return;
     const member = state.members.find(m => m.id === id);
     if (!member) return;
 
@@ -1530,6 +1563,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function removeExpense(id: string) {
+    if (isReadOnly) return;
     const expIndex = state.expenses.findIndex(e => e.id === id);
     if (expIndex === -1) return;
     
@@ -1545,6 +1579,7 @@ import Layout from '../layouts/Layout.astro';
 
   // Event Bindings
   elements.groupName.addEventListener('input', () => {
+    if (isReadOnly) return;
     state.name = elements.groupName.value.trim() || 'Untitled Split';
     saveCurrentGroup(state);
     populateRecentsDropdown();
@@ -1552,6 +1587,7 @@ import Layout from '../layouts/Layout.astro';
   });
 
   elements.currencySelector.addEventListener('change', () => {
+    if (isReadOnly) return;
     state.currency = elements.currencySelector.value;
     elements.expenseAmountSymbol.textContent = state.currency;
     saveCurrentGroup(state);
@@ -1559,6 +1595,7 @@ import Layout from '../layouts/Layout.astro';
   });
 
   elements.modeTravelBtn.addEventListener('click', () => {
+    if (isReadOnly) return;
     if (state.mode === 'travel') return;
     updateModeUI('travel');
     populateCategories();
@@ -1567,6 +1604,7 @@ import Layout from '../layouts/Layout.astro';
   });
 
   elements.modeSubscriptionBtn.addEventListener('click', () => {
+    if (isReadOnly) return;
     if (state.mode === 'subscription') return;
     updateModeUI('subscription');
     populateCategories();
@@ -1575,6 +1613,21 @@ import Layout from '../layouts/Layout.astro';
   });
 
   elements.recentSplitsSelector.addEventListener('change', () => {
+    if (isReadOnly) {
+      isReadOnly = false;
+      // Restore UI controls from read-only mode
+      if (elements.groupName) elements.groupName.disabled = false;
+      if (elements.currencySelector) elements.currencySelector.disabled = false;
+      if (elements.modeTravelBtn) elements.modeTravelBtn.classList.remove('pointer-events-none', 'opacity-50');
+      if (elements.modeSubscriptionBtn) elements.modeSubscriptionBtn.classList.remove('pointer-events-none', 'opacity-50');
+      
+      if (elements.resetGroupBtn) elements.resetGroupBtn.classList.remove('hidden');
+      if (elements.clearAllMemoryBtn) elements.clearAllMemoryBtn.classList.remove('hidden');
+      if (elements.addMemberForm) elements.addMemberForm.classList.remove('hidden');
+      if (elements.addExpenseCardContainer) elements.addExpenseCardContainer.classList.remove('hidden');
+      if (elements.mobileAddExpenseFab) elements.mobileAddExpenseFab.classList.remove('hidden');
+    }
+
     const selectedId = elements.recentSplitsSelector.value;
     if (!selectedId) return;
 
@@ -1597,6 +1650,7 @@ import Layout from '../layouts/Layout.astro';
   elements.expenseCategory.addEventListener('change', toggleStreamingServiceVisibility);
 
   elements.resetGroupBtn.addEventListener('click', () => {
+    if (isReadOnly) return;
     if (!confirm('Are you sure you want to completely reset this group split? All current expenses and members will be cleared.')) {
       return;
     }
@@ -1616,12 +1670,19 @@ import Layout from '../layouts/Layout.astro';
     updateModeUI(state.mode);
     populateCategories();
     
+    // Reset split type toggle
+    currentSplitType = 'equal';
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
+    elements.unequalStatusText.classList.add('hidden');
+    
     saveCurrentGroup(state);
     renderAll();
     showToast('Group reset successfully.');
   });
 
   elements.clearAllMemoryBtn.addEventListener('click', () => {
+    if (isReadOnly) return;
     if (!confirm('WARNING: This will completely delete all current groups, all recent history, and all stored data from this device. This action CANNOT be undone. Are you sure you want to proceed?')) {
       return;
     }
@@ -1652,12 +1713,14 @@ import Layout from '../layouts/Layout.astro';
   // Add Member Form
   elements.addMemberForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (isReadOnly) return;
     const val = elements.newMemberName.value;
     addMember(val);
   });
 
   // Checkbox Selectors
   elements.splitSelectAll.addEventListener('click', () => {
+    if (isReadOnly) return;
     const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
     rows.forEach((row: any) => {
       const cb = row.querySelector('input[type="checkbox"]');
@@ -1674,6 +1737,7 @@ import Layout from '../layouts/Layout.astro';
   });
 
   elements.splitDeselectAll.addEventListener('click', () => {
+    if (isReadOnly) return;
     const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
     rows.forEach((row: any) => {
       const cb = row.querySelector('input[type="checkbox"]');
@@ -1692,6 +1756,7 @@ import Layout from '../layouts/Layout.astro';
 
   // Split type toggles
   elements.splitTypeEqualBtn.addEventListener('click', () => {
+    if (isReadOnly) return;
     if (currentSplitType === 'equal') return;
     currentSplitType = 'equal';
     
@@ -1710,6 +1775,7 @@ import Layout from '../layouts/Layout.astro';
   });
 
   elements.splitTypeUnequalBtn.addEventListener('click', () => {
+    if (isReadOnly) return;
     if (currentSplitType === 'unequal') return;
     currentSplitType = 'unequal';
     
@@ -1747,6 +1813,7 @@ import Layout from '../layouts/Layout.astro';
   // Add Expense
   elements.addExpenseForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (isReadOnly) return;
     
     const title = elements.expenseTitle.value;
     const category = elements.expenseCategory.value;
