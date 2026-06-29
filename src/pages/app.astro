@@ -96,18 +96,18 @@ import Layout from '../layouts/Layout.astro';
           <!-- Mode Toggle -->
           <div>
             <label class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider mb-2">Split Mode</label>
-            <div class="relative flex h-10 items-center justify-between rounded-xl border border-hairline bg-canvas-soft-2 p-1">
+            <div class="relative flex h-10 items-center justify-between rounded-xl border border-zinc-200 dark:border-zinc-800/60 bg-zinc-100 dark:bg-zinc-800/50 p-1">
               <button 
                 type="button" 
                 id="mode-travel-btn"
-                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-ink bg-canvas shadow-sm cursor-pointer"
+                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-all text-zinc-950 dark:text-zinc-100 bg-white dark:bg-zinc-700 shadow-sm cursor-pointer"
               >
                 Travel
               </button>
               <button 
                 type="button" 
                 id="mode-subscription-btn"
-                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-body hover:text-ink cursor-pointer"
+                class="z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-all text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer"
               >
                 Sub
               </button>
@@ -126,14 +126,14 @@ import Layout from '../layouts/Layout.astro';
           <button 
             type="button" 
             id="reset-group-btn"
-            class="inline-flex h-10 items-center justify-center rounded-xl border border-error bg-canvas text-error px-4 text-xs font-semibold hover:bg-error-soft/30 transition-all cursor-pointer active:scale-95 shadow-sm"
+            class="inline-flex h-10 items-center justify-center rounded-xl border border-red-500 dark:border-red-400 bg-white dark:bg-zinc-900 text-red-600 dark:text-red-400 px-4 text-xs font-semibold hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer active:scale-[0.98] shadow-sm"
           >
             Reset Group
           </button>
           <button 
             type="button" 
             id="clear-all-memory-btn"
-            class="inline-flex h-10 items-center justify-center rounded-xl border border-error bg-error text-white dark:bg-red-950 dark:border-error px-4 text-xs font-semibold hover:opacity-95 transition-all cursor-pointer active:scale-95 shadow-sm"
+            class="inline-flex h-10 items-center justify-center rounded-xl border border-red-500 dark:border-red-400 bg-white dark:bg-zinc-900 text-red-600 dark:text-red-400 px-4 text-xs font-semibold hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer active:scale-[0.98] shadow-sm"
             title="Clear all stored splits, history, and current data from this device"
           >
             Clear All Memory
@@ -156,11 +156,11 @@ import Layout from '../layouts/Layout.astro';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
               <div>
-                <h2 class="text-lg font-bold tracking-tight text-ink">Group Members</h2>
-                <p class="text-xs text-body mt-0.5">Add people who will split the bills.</p>
+                <h2 class="text-lg font-semibold tracking-tight text-ink mb-1">Group Members</h2>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">Add people who will split the bills.</p>
               </div>
             </div>
-            <span id="members-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2.5 py-1 rounded-full text-body border border-hairline font-semibold">
+            <span id="members-count-badge" class="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 rounded-full text-zinc-600 dark:text-zinc-400 font-medium">
               0 / 30
             </span>
           </div>
@@ -190,7 +190,7 @@ import Layout from '../layouts/Layout.astro';
             </div>
             <button 
               type="submit" 
-              class="inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-6 text-sm font-semibold text-white hover:opacity-95 transition-all shadow-md active:scale-95 cursor-pointer"
+              class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 active:scale-[0.98] transition-all cursor-pointer"
             >
               Add
             </button>
@@ -199,8 +199,8 @@ import Layout from '../layouts/Layout.astro';
           <!-- Members Chips Container -->
           <div id="members-list-container" class="flex flex-wrap gap-2.5 mt-6 min-h-[40px] items-center">
             <!-- Dynamic Member Chips -->
-            <div id="empty-members-placeholder" class="py-4 text-center flex flex-col items-center justify-center text-mute space-y-2 w-full">
-              <svg class="h-10 w-10 text-mute/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <div id="empty-members-placeholder" class="py-6 text-center flex flex-col items-center justify-center text-mute space-y-2 w-full">
+              <svg class="h-10 w-10 text-zinc-300 dark:text-zinc-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <span class="text-xs font-semibold text-ink">No members added yet</span>
@@ -233,8 +233,8 @@ import Layout from '../layouts/Layout.astro';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
               </svg>
               <div>
-                <h2 class="text-lg font-bold tracking-tight text-ink">Add Expense</h2>
-                <p class="text-xs text-body mt-0.5">Enter expense item details below.</p>
+                <h2 class="text-lg font-semibold tracking-tight text-ink mb-1">Add Expense</h2>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">Enter expense item details below.</p>
               </div>
             </div>
 
@@ -342,18 +342,18 @@ import Layout from '../layouts/Layout.astro';
                 <div class="flex items-center justify-between">
                   <span class="block font-mono text-[10px] font-semibold text-mute uppercase tracking-wider">Split Among</span>
                   <!-- Split Type Selector -->
-                  <div class="inline-flex rounded-lg bg-canvas-soft border border-hairline p-0.5" id="split-type-toggle-container">
+                  <div class="inline-flex rounded-xl bg-zinc-100 dark:bg-zinc-800/50 p-1 border border-hairline" id="split-type-toggle-container">
                     <button 
                       type="button" 
                       id="split-type-equal-btn"
-                      class="text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer"
+                      class="text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all bg-white dark:bg-zinc-700 text-zinc-950 dark:text-zinc-100 shadow-sm cursor-pointer"
                     >
                       Equally
                     </button>
                     <button 
                       type="button" 
                       id="split-type-unequal-btn"
-                      class="text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer"
+                      class="text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 cursor-pointer"
                     >
                       Unequally
                     </button>
@@ -380,7 +380,7 @@ import Layout from '../layouts/Layout.astro';
               <!-- Submit Button -->
               <button 
                 type="submit" 
-                class="w-full inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-5 text-sm font-semibold text-white hover:opacity-95 transition-all shadow-md active:scale-95 cursor-pointer"
+                class="w-full inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
               >
                 Log Expense
               </button>
@@ -396,11 +396,11 @@ import Layout from '../layouts/Layout.astro';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
               </svg>
               <div>
-                <h2 class="text-lg font-bold tracking-tight text-ink">Logged Expenses</h2>
-                <p class="text-xs text-body mt-0.5">List of group bills. Hover to view breakdown. Swipe left on mobile to delete.</p>
+                <h2 class="text-lg font-semibold tracking-tight text-ink mb-1">Logged Expenses</h2>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">List of group bills. Hover to view breakdown. Swipe left on mobile to delete.</p>
               </div>
             </div>
-            <span id="expenses-count-badge" class="font-mono text-xs bg-canvas-soft-2 px-2.5 py-1 rounded-full text-body border border-hairline font-semibold">
+            <span id="expenses-count-badge" class="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 rounded-full text-zinc-600 dark:text-zinc-400 font-medium">
               0 / 300
             </span>
           </div>
@@ -408,12 +408,12 @@ import Layout from '../layouts/Layout.astro';
           <!-- Expenses Container -->
           <div id="expenses-list-container" class="divide-y divide-hairline max-h-[420px] overflow-y-auto pr-1">
             <!-- Dynamic list -->
-            <div id="empty-expenses-placeholder" class="py-12 text-center flex flex-col items-center justify-center text-mute space-y-2">
-              <svg class="h-12 w-12 text-mute/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <div id="empty-expenses-placeholder" class="py-12 text-center flex flex-col items-center justify-center space-y-2">
+              <svg class="h-10 w-10 text-zinc-300 dark:text-zinc-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5h.007v.008H3.75V4.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3 13.5h.008v.008H3V13.5zM12 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span class="text-xs font-semibold text-ink">No expenses logged yet</span>
-              <span class="text-[10px] text-mute max-w-xs">Log bills, flights, roommate payments above to distribute balances.</span>
+              <span class="text-sm font-medium text-ink">No expenses logged yet</span>
+              <span class="text-xs text-zinc-500 max-w-xs">Log bills, flights, roommate payments above to distribute balances.</span>
             </div>
           </div>
         </div>
@@ -430,8 +430,8 @@ import Layout from '../layouts/Layout.astro';
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
             <div>
-              <h2 class="text-lg font-bold tracking-tight text-ink">Split Summary</h2>
-              <p class="text-xs text-body mt-0.5">Calculated shares and net balances.</p>
+              <h2 class="text-lg font-semibold tracking-tight text-ink mb-1">Split Summary</h2>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400">Calculated shares and net balances.</p>
             </div>
           </div>
 
@@ -481,19 +481,19 @@ import Layout from '../layouts/Layout.astro';
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
             </svg>
             <div>
-              <h2 class="text-lg font-bold tracking-tight text-ink">Settlement Path</h2>
-              <p class="text-xs text-body mt-0.5">Optimized directions to settle debts.</p>
+              <h2 class="text-lg font-semibold tracking-tight text-ink mb-1">Settlement Path</h2>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400">Optimized directions to settle debts.</p>
             </div>
           </div>
 
           <div id="settlements-list-container" class="space-y-4 min-h-[50px]">
             <!-- Dynamic Settlement Cards -->
-            <div id="empty-settlements-placeholder" class="py-6 text-center flex flex-col items-center justify-center text-mute space-y-1 w-full">
-              <svg class="h-10 w-10 text-emerald-500/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <div id="empty-settlements-placeholder" class="py-8 text-center flex flex-col items-center justify-center space-y-2 w-full">
+              <svg class="h-10 w-10 text-zinc-300 dark:text-zinc-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0110 21a3.745 3.745 0 01-3.296-1.043 3.746 3.746 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
               </svg>
-              <span class="text-xs font-semibold text-ink">Everyone is settled</span>
-              <span class="text-[10px] text-mute">No transfers are needed at the moment!</span>
+              <span class="text-sm font-medium text-ink">Everyone is settled</span>
+              <span class="text-xs text-zinc-500">No transfers are needed at the moment!</span>
             </div>
           </div>
         </div>
@@ -505,8 +505,8 @@ import Layout from '../layouts/Layout.astro';
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742l-2.622 1.31M15.316 8.258l-2.62 1.312m1.442 8.598a3 3 0 11-6 0 3 3 0 016 0zm6-8c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm-12 8c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"></path>
             </svg>
             <div>
-              <h2 class="text-lg font-bold tracking-tight text-ink">Share & Export</h2>
-              <p class="text-xs text-body mt-0.5">Share this split or export data client-side.</p>
+              <h2 class="text-lg font-semibold tracking-tight text-ink mb-1">Share & Export</h2>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400">Share this split or export data client-side.</p>
             </div>
           </div>
 
@@ -530,7 +530,7 @@ import Layout from '../layouts/Layout.astro';
                 <button 
                   type="button" 
                   id="copy-link-btn" 
-                  class="inline-flex h-10 w-24 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-xs font-semibold text-white hover:opacity-95 transition-all shadow-md active:scale-95 cursor-pointer"
+                  class="inline-flex h-10 w-24 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-xs font-semibold text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
                 >
                   Copy
                 </button>
@@ -542,7 +542,7 @@ import Layout from '../layouts/Layout.astro';
               href="#" 
               id="whatsapp-share-btn"
               target="_blank"
-              class="w-full inline-flex h-10 items-center justify-center rounded-xl border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+              class="w-full inline-flex h-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 text-xs font-semibold text-ink hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-sm gap-2 active:scale-[0.98] cursor-pointer"
             >
               <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.115-2.905-6.99C16.559 1.875 14.09 .843 11.453.843c-5.441 0-9.865 4.422-9.869 9.866-.001 1.77.464 3.498 1.348 5.016L1.879 21.8l6.32-1.656-.552.31z"></path>
@@ -554,7 +554,7 @@ import Layout from '../layouts/Layout.astro';
             <button 
               type="button" 
               id="export-pdf-btn"
-              class="w-full inline-flex h-10 items-center justify-center rounded-xl border border-hairline bg-canvas text-xs font-semibold text-ink hover:bg-canvas-soft-2 transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+              class="w-full inline-flex h-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 text-xs font-semibold text-ink hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-sm gap-2 active:scale-[0.98] cursor-pointer"
             >
               <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -962,11 +962,11 @@ import Layout from '../layouts/Layout.astro';
   function updateModeUI(mode: 'travel' | 'subscription') {
     state.mode = mode;
     if (mode === 'travel') {
-      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-ink bg-canvas shadow-sm cursor-pointer";
-      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-body hover:text-ink cursor-pointer";
+      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-all text-zinc-950 dark:text-zinc-100 bg-white dark:bg-zinc-700 shadow-sm cursor-pointer";
+      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-all text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer";
     } else {
-      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-ink bg-canvas shadow-sm cursor-pointer";
-      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-colors text-body hover:text-ink cursor-pointer";
+      elements.modeSubscriptionBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-all text-zinc-950 dark:text-zinc-100 bg-white dark:bg-zinc-700 shadow-sm cursor-pointer";
+      elements.modeTravelBtn.className = "z-10 w-1/2 text-center text-xs font-semibold py-1 rounded-lg transition-all text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer";
     }
   }
 
@@ -1608,6 +1608,15 @@ import Layout from '../layouts/Layout.astro';
     if (isReadOnly) return;
     state.currency = elements.currencySelector.value;
     elements.expenseAmountSymbol.textContent = state.currency;
+    
+    // Instantly update total spend currency display in calculations card
+    if (totalSpendAnimFrameId !== null) {
+      cancelAnimationFrame(totalSpendAnimFrameId);
+      totalSpendAnimFrameId = null;
+    }
+    const summary = calculateSplit(state);
+    elements.summaryTotalSpend.innerHTML = state.currency + summary.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    
     saveCurrentGroup(state);
     renderAll();
   });
@@ -1694,8 +1703,8 @@ import Layout from '../layouts/Layout.astro';
     
     // Reset split type toggle
     currentSplitType = 'equal';
-    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
-    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all bg-white dark:bg-zinc-700 text-zinc-950 dark:text-zinc-100 shadow-sm cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 cursor-pointer';
     elements.unequalStatusText.classList.add('hidden');
     
     saveCurrentGroup(state);
@@ -1777,8 +1786,8 @@ import Layout from '../layouts/Layout.astro';
     currentSplitType = 'equal';
     
     // Toggle active state classes
-    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
-    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all bg-white dark:bg-zinc-700 text-zinc-950 dark:text-zinc-100 shadow-sm cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 cursor-pointer';
     
     // Hide inputs
     const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
@@ -1796,8 +1805,8 @@ import Layout from '../layouts/Layout.astro';
     currentSplitType = 'unequal';
     
     // Toggle active state classes
-    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all text-body hover:text-ink cursor-pointer';
-    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-md transition-all bg-canvas text-ink shadow-sm cursor-pointer';
+    elements.splitTypeEqualBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 cursor-pointer';
+    elements.splitTypeUnequalBtn.className = 'text-[10px] font-bold py-1 px-2.5 rounded-lg transition-all bg-white dark:bg-zinc-700 text-zinc-950 dark:text-zinc-100 shadow-sm cursor-pointer';
     
     // Show inputs
     const rows = elements.splitMembersCheckboxes.querySelectorAll('.split-member-row');
