@@ -131,6 +131,7 @@ export function sanitizeGroupState(state: any): GroupState | null {
                paidBy: e.paidBy,
                splitAmong: cleanSplitAmong,
                shares: cleanShares,
+               isSettlement: typeof e.isSettlement === 'boolean' ? e.isSettlement : undefined,
              });
           }
         }

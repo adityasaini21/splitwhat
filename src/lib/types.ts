@@ -14,6 +14,7 @@ export interface Expense {
   paidBy: string; // Member.id
   splitAmong: string[]; // Member.id[]
   shares?: Record<string, number>; // Member.id -> specific amount
+  isSettlement?: boolean;
 }
 
 export interface GroupState {

@@ -29,17 +29,28 @@ export function calculateSplit(state: GroupState): SplitSummary {
       continue;
     }
 
-    totalSpend += amount;
+    if (expense.isSettlement) {
+      // Credit the payer (debtor)'s out-of-pocket payment
+      memberSummaries[expense.paidBy].paid += amount;
+      
+      // Decrease the receiver (creditor)'s out-of-pocket payment
+      const receiverId = expense.splitAmong[0];
+      if (receiverId && memberIds.has(receiverId)) {
+        memberSummaries[receiverId].paid -= amount;
+      }
+    } else {
+      totalSpend += amount;
 
-    // Credit the payer
-    memberSummaries[expense.paidBy].paid += amount;
+      // Credit the payer
+      memberSummaries[expense.paidBy].paid += amount;
 
-    // Debit the split targets
-    for (const targetId of activeSplitAmong) {
-      const share = (expense.shares && typeof expense.shares[targetId] === 'number')
-        ? expense.shares[targetId]
-        : amount / activeSplitAmong.length;
-      memberSummaries[targetId].owed += share;
+      // Debit the split targets
+      for (const targetId of activeSplitAmong) {
+        const share = (expense.shares && typeof expense.shares[targetId] === 'number')
+          ? expense.shares[targetId]
+          : amount / activeSplitAmong.length;
+        memberSummaries[targetId].owed += share;
+      }
     }
   }
 

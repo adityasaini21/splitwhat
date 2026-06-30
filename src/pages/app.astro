@@ -1524,7 +1524,8 @@ import Layout from '../layouts/Layout.astro';
       category: 'other',
       amount: amount,
       paidBy: fromId,
-      splitAmong: [toId]
+      splitAmong: [toId],
+      isSettlement: true
     };
 
     state.expenses.push(newExpense);
