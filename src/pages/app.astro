@@ -146,10 +146,10 @@ import Layout from '../layouts/Layout.astro';
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
       <!-- LEFT COLUMN: Members & Expenses -->
-      <div class="lg:col-span-7 space-y-8">
+      <div class="contents lg:block lg:col-span-7 lg:space-y-8">
         
         <!-- Members List Card -->
-        <div class="vercel-card p-6">
+        <div class="vercel-card p-6 order-1 lg:order-none">
           <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
             <div class="flex items-center gap-2">
               <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -210,7 +210,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <!-- Add Expense Form Container (Acts as Bottom Sheet on Mobile) -->
-        <div id="add-expense-card-container" class="fixed inset-x-0 bottom-0 z-50 rounded-t-3xl bg-canvas p-6 shadow-2xl transform translate-y-full transition-transform duration-300 md:relative md:inset-auto md:translate-y-0 md:rounded-2xl md:shadow-none md:z-auto md:bg-transparent md:p-0">
+        <div id="add-expense-card-container" class="fixed inset-x-0 bottom-0 z-50 rounded-t-3xl bg-canvas p-6 shadow-2xl transform translate-y-full transition-transform duration-300 md:relative md:inset-auto md:translate-y-0 md:rounded-2xl md:shadow-none md:z-auto md:bg-transparent md:p-0 order-3 lg:order-none">
           
           <div class="vercel-card p-6 h-full md:h-auto overflow-y-auto max-h-[85vh] md:max-h-none">
             <!-- Drag indicator / Close handle for Mobile Sheet -->
@@ -389,7 +389,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <!-- Logged Expenses List Card -->
-        <div class="vercel-card p-6">
+        <div class="vercel-card p-6 order-5 lg:order-none">
           <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
             <div class="flex items-center gap-2">
               <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -421,10 +421,10 @@ import Layout from '../layouts/Layout.astro';
       </div>
 
       <!-- RIGHT COLUMN: Summary & Settlements (Sticky on Desktop) -->
-      <div class="lg:col-span-5 space-y-8 lg:sticky lg:top-20">
+      <div class="contents lg:block lg:col-span-5 lg:space-y-8 lg:sticky lg:top-20">
         
         <!-- Summary Dashboard Card -->
-        <div class="vercel-card p-6">
+        <div class="vercel-card p-6 order-2 lg:order-none">
           <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-6">
             <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
@@ -475,7 +475,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <!-- Settlements Card -->
-        <div class="vercel-card p-6">
+        <div class="vercel-card p-6 order-4 lg:order-none">
           <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-4">
             <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
@@ -499,7 +499,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <!-- Share Actions & Exports Card -->
-        <div class="vercel-card p-6">
+        <div class="vercel-card p-6 order-6 lg:order-none">
           <div class="flex items-center gap-2 border-b border-hairline pb-4 mb-6">
             <svg class="h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742l-2.622 1.31M15.316 8.258l-2.62 1.312m1.442 8.598a3 3 0 11-6 0 3 3 0 016 0zm6-8c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm-12 8c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"></path>
@@ -577,6 +577,24 @@ import Layout from '../layouts/Layout.astro';
 
     </div>
   </div>
+
+  <!-- Mobile Bottom Sheet Backdrop -->
+  <div 
+    id="mobile-sheet-backdrop" 
+    class="hidden fixed inset-0 z-40 bg-zinc-950/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 md:hidden"
+  ></div>
+
+  <!-- Floating Action Button (FAB) for Mobile Add Expense -->
+  <button 
+    id="mobile-add-expense-fab" 
+    type="button" 
+    class="md:hidden fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-xl shadow-indigo-500/30 hover:scale-105 active:scale-95 transition-all cursor-pointer focus:outline-none"
+    aria-label="Add Expense"
+  >
+    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+  </button>
 
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
