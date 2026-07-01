@@ -1986,90 +1986,212 @@ import Layout from '../layouts/Layout.astro';
       const summary = calculateSplit(state);
       const doc = new jsPDF();
       
-      const primaryColor = [23, 23, 23];
-      const grayColor = [136, 136, 136];
-      const lightLineColor = 230;
+      // Color Palette Definition (Slate & Indigo Theme)
+      const theme = {
+        primary: [15, 23, 42],      // Slate 900
+        secondary: [71, 85, 105],    // Slate 600
+        mute: [148, 163, 184],      // Slate 400
+        accent: [79, 70, 229],      // Indigo 600
+        success: [16, 185, 129],    // Emerald 500
+        error: [244, 63, 94],       // Rose 500
+        bgCard: [248, 250, 252],    // Slate 50
+        border: [226, 232, 240],    // Slate 200
+        borderLight: [241, 245, 249]// Slate 100
+      };
 
+      // Top colored banner accent line
+      doc.setFillColor(theme.accent[0], theme.accent[1], theme.accent[2]);
+      doc.rect(0, 0, 210, 4, 'F');
+
+      // Title & Branding (Header)
       doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(22);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('SplitWhat Expense Summary', 20, 20);
-
+      doc.setFontSize(20);
+      doc.setTextColor(theme.primary[0], theme.primary[1], theme.primary[2]);
+      doc.text('SplitWhat', 20, 20);
+      
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(10);
-      doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
-      doc.text(`Group: ${state.name}`, 20, 30);
-      doc.text(`Date: ${new Date().toLocaleDateString()} • Mode: ${state.mode === 'travel' ? 'Travel' : 'Subscription'}`, 20, 35);
-      doc.text(`Total Spend: ${state.currency}${summary.totalSpend.toFixed(2)}`, 20, 40);
+      doc.setTextColor(theme.accent[0], theme.accent[1], theme.accent[2]);
+      doc.text('EXPENSE SUMMARY REPORT', 20, 25);
 
-      doc.setDrawColor(lightLineColor);
-      doc.line(20, 45, 190, 45);
+      // Meta Information Right Side
+      doc.setFontSize(9);
+      doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+      doc.text(`Group: ${state.name}`, 190, 20, { align: 'right' });
+      doc.text(`Date: ${new Date().toLocaleDateString()} • Mode: ${state.mode === 'travel' ? 'Travel' : 'Subscription'}`, 190, 25, { align: 'right' });
+
+      // Divider Line
+      doc.setDrawColor(theme.border[0], theme.border[1], theme.border[2]);
+      doc.line(20, 32, 190, 32);
+
+      // Top Spender Calculation
+      let maxPaid = 0;
+      let topPayerId = '';
+      Object.values(summary.memberSummaries).forEach((s) => {
+        if (s.paid > maxPaid) {
+          maxPaid = s.paid;
+          topPayerId = s.memberId;
+        }
+      });
+      const topPayerName = (topPayerId && maxPaid > 0)
+        ? (state.members.find(m => m.id === topPayerId)?.name || 'N/A')
+        : 'None';
+
+      // KPI Widgets Box (Summary Stats Card)
+      doc.setFillColor(theme.bgCard[0], theme.bgCard[1], theme.bgCard[2]);
+      doc.setDrawColor(theme.border[0], theme.border[1], theme.border[2]);
+      doc.roundedRect(20, 38, 170, 20, 2, 2, 'FD');
+
+      // Col 1: Total Spend Widget
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+      doc.text('TOTAL GROUP SPEND', 25, 45);
 
       doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(14);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Balance Sheet', 20, 55);
+      doc.setFontSize(12);
+      doc.setTextColor(theme.accent[0], theme.accent[1], theme.accent[2]);
+      doc.text(`${state.currency}${summary.totalSpend.toFixed(2)}`, 25, 52);
 
-      doc.setFontSize(10);
-      doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
-      doc.text('Member', 20, 65);
-      doc.text('Paid', 70, 65, { align: 'right' });
-      doc.text('Owed', 110, 65, { align: 'right' });
-      doc.text('Net Balance', 150, 65, { align: 'right' });
-      doc.line(20, 67, 190, 67);
-
-      let yOffset = 75;
+      // Col 2: Top Spender Widget
       doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      doc.setFontSize(8);
+      doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+      doc.text('TOP SPENDER', 110, 45);
 
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(theme.primary[0], theme.primary[1], theme.primary[2]);
+      doc.text(topPayerName, 110, 52);
+
+      // Section: Balance Sheet
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(theme.accent[0], theme.accent[1], theme.accent[2]);
+      doc.text('Balance Sheet', 20, 72);
+
+      // Table Header Row Background
+      doc.setFillColor(theme.borderLight[0], theme.borderLight[1], theme.borderLight[2]);
+      doc.rect(20, 77, 170, 8, 'F');
+
+      // Table Headers
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+      doc.text('Member', 24, 82);
+      doc.text('Paid', 80, 82, { align: 'right' });
+      doc.text('Owed', 125, 82, { align: 'right' });
+      doc.text('Net Balance', 185, 82, { align: 'right' });
+
+      let yOffset = 91;
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9);
+
+      let idx = 0;
       for (const m of state.members) {
         const ms = summary.memberSummaries[m.id] || { paid: 0, owed: 0, net: 0 };
-        doc.text(m.name, 20, yOffset);
-        doc.text(`${state.currency}${ms.paid.toFixed(2)}`, 70, yOffset, { align: 'right' });
-        doc.text(`${state.currency}${ms.owed.toFixed(2)}`, 110, yOffset, { align: 'right' });
+        
+        // Zebra striping rows
+        if (idx % 2 === 1) {
+          doc.setFillColor(theme.bgCard[0], theme.bgCard[1], theme.bgCard[2]);
+          doc.rect(20, yOffset - 5.5, 170, 7.5, 'F');
+        }
+
+        // Draw Row Data
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(theme.primary[0], theme.primary[1], theme.primary[2]);
+        doc.text(m.name, 24, yOffset);
+        
+        doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+        doc.text(`${state.currency}${ms.paid.toFixed(2)}`, 80, yOffset, { align: 'right' });
+        doc.text(`${state.currency}${ms.owed.toFixed(2)}`, 125, yOffset, { align: 'right' });
         
         let netString = '';
         if (ms.net > 0.01) {
           netString = `+${state.currency}${ms.net.toFixed(2)}`;
+          doc.setTextColor(theme.success[0], theme.success[1], theme.success[2]);
+          doc.setFont('Helvetica', 'bold');
         } else if (ms.net < -0.01) {
           netString = `-${state.currency}${Math.abs(ms.net).toFixed(2)}`;
+          doc.setTextColor(theme.error[0], theme.error[1], theme.error[2]);
+          doc.setFont('Helvetica', 'bold');
         } else {
           netString = `${state.currency}0.00`;
+          doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+          doc.setFont('Helvetica', 'normal');
         }
         
-        doc.text(netString, 150, yOffset, { align: 'right' });
-        yOffset += 8;
+        doc.text(netString, 185, yOffset, { align: 'right' });
+        
+        yOffset += 7.5;
+        idx++;
       }
 
-      doc.line(20, yOffset, 190, yOffset);
-      yOffset += 12;
+      // Draw bottom table boundary line
+      doc.setDrawColor(theme.border[0], theme.border[1], theme.border[2]);
+      doc.line(20, yOffset - 3, 190, yOffset - 3);
+      yOffset += 8;
+
+      // Section: Settlements
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(theme.accent[0], theme.accent[1], theme.accent[2]);
+      doc.text('Settlement Instructions', 20, yOffset);
+      yOffset += 5;
+
+      // Table Header Row Background for Settlements
+      doc.setFillColor(theme.borderLight[0], theme.borderLight[1], theme.borderLight[2]);
+      doc.rect(20, yOffset, 170, 8, 'F');
 
       doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(14);
-      doc.text('Settlement Directions', 20, yOffset);
-      yOffset += 10;
+      doc.setFontSize(9);
+      doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+      doc.text('Payments Required to Clear Debts', 24, yOffset + 5);
+      yOffset += 13;
 
       doc.setFont('Helvetica', 'normal');
-      doc.setFontSize(10);
+      doc.setFontSize(9.5);
       
       if (summary.settlements.length === 0) {
-        doc.text('Everyone is fully settled! No transactions required.', 20, yOffset);
+        doc.setTextColor(theme.success[0], theme.success[1], theme.success[2]);
+        doc.text('Everyone is fully settled! No transactions required.', 24, yOffset);
+        yOffset += 8;
       } else {
         for (const item of summary.settlements) {
           const fromName = state.members.find(m => m.id === item.from)?.name || 'Deleted Member';
           const toName = state.members.find(m => m.id === item.to)?.name || 'Deleted Member';
-          doc.text(`-  [ ]  ${fromName} pays ${toName}   -->   ${state.currency}${item.amount.toFixed(2)}`, 20, yOffset);
-          yOffset += 8;
+          
+          // Draw card outline for each settlement row
+          doc.setDrawColor(theme.borderLight[0], theme.borderLight[1], theme.borderLight[2]);
+          doc.setFillColor(255, 255, 255);
+          doc.roundedRect(20, yOffset - 5, 170, 9, 1, 1, 'FD');
+
+          // Draw a neat graphical checkbox box
+          doc.setDrawColor(theme.mute[0], theme.mute[1], theme.mute[2]);
+          doc.roundedRect(24, yOffset - 3.2, 4.5, 4.5, 0.8, 0.8, 'D');
+
+          // Text details
+          doc.setFont('Helvetica', 'normal');
+          doc.setTextColor(theme.primary[0], theme.primary[1], theme.primary[2]);
+          doc.text(`${fromName} pays ${toName}`, 32, yOffset);
+          
+          doc.setFont('Helvetica', 'bold');
+          doc.setTextColor(theme.accent[0], theme.accent[1], theme.accent[2]);
+          doc.text(`${state.currency}${item.amount.toFixed(2)}`, 185, yOffset, { align: 'right' });
+
+          yOffset += 12;
         }
       }
 
-      yOffset += 12;
-      doc.line(20, yOffset, 190, yOffset);
-      yOffset += 8;
+      // Footer Section
+      doc.setDrawColor(theme.border[0], theme.border[1], theme.border[2]);
+      doc.line(20, 275, 190, 275);
       
+      doc.setFont('Helvetica', 'normal');
       doc.setFontSize(8);
-      doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
-      doc.text('Generated instantly by SplitWhat — Private client-side bill splitting.', 20, yOffset);
+      doc.setTextColor(theme.secondary[0], theme.secondary[1], theme.secondary[2]);
+      doc.text('Generated instantly by SplitWhat — Client-side privacy-first bill splitting.', 20, 281);
+      doc.text('splitwhat.app', 190, 281, { align: 'right' });
 
       const filename = `${state.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}_summary.pdf`;
       doc.save(filename);
