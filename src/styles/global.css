@@ -229,3 +229,91 @@ select {
   border-color: var(--card-hover-border) !important;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px var(--card-glow) !important;
 }
+
+/* Dotted background pattern */
+.dotted-bg {
+  background-image: radial-gradient(var(--border-hairline-strong) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Bento-specific graphic containers */
+.bento-graphic {
+  background-color: var(--bg-canvas-soft);
+  border: 1px dashed var(--border-hairline-strong);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Pulse animation for mockup cursor */
+@keyframes mockCursorClick {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40% {
+    transform: translate(-10px, -10px) scale(0.9);
+  }
+  50% {
+    transform: translate(-10px, -10px) scale(0.85);
+  }
+  60% {
+    transform: translate(-10px, -10px) scale(1);
+  }
+}
+.animate-mock-cursor {
+  animation: mockCursorClick 4s ease-in-out infinite;
+}
+
+/* Pulse highlight for simulated action */
+@keyframes mockActionHighlight {
+  0%, 45%, 65%, 100% {
+    background-color: transparent;
+    border-color: var(--border-hairline);
+  }
+  50%, 60% {
+    background-color: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.4);
+  }
+}
+.animate-mock-highlight {
+  animation: mockActionHighlight 4s ease-in-out infinite;
+}
+
+/* Glowing text highlight */
+.text-glow {
+  text-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}
+.dark .text-glow {
+  text-shadow: 0 0 15px rgba(129, 140, 248, 0.6);
+}
+
+/* Animated node path */
+@keyframes dash-move {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+.animated-dash-line {
+  stroke-dasharray: 6, 4;
+  animation: dash-move 1.5s linear infinite;
+}
+
+/* View transitions for dark mode toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+
