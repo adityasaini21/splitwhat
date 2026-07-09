@@ -9,9 +9,9 @@ interface Props {
 }
 
 const {
-  title = 'SplitWhat — The No-Login Bill Splitter',
-  description = 'Split What? Easily split bills, travel expenses, and subscription costs with friends. A free, client-side, no-login alternative to Splitwise. Completely offline-capable.',
-  keywords = 'split bills, travel expense splitter, subscription bill splitter, splitwise alternative, no login bill splitter, free bill splitter',
+  title = 'Split Bill Calculator Free — SplitWhat Online Bill Splitter',
+  description = 'SplitWhat is a free, local-first split bill calculator & online split bill payment manager. The ultimate Splitwise alternative to split bills online for restaurants, trips, and roommates without logging in.',
+  keywords = 'split bill, split bill calculator, split bill online calculator, split bill payment, split bill payments, split bill calculator app, split bill calculator free, split bill online, splitwise, what is splitwise, splitwise login, splitwise alternatives, restaurant split bill calculator, free split bill calculator',
   ogImage = '/og-image.png'
 } = Astro.props;
 
@@ -40,6 +40,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://splitwha
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="SplitWhat" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
