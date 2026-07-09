@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="About Us — SplitWhat Split Bill Calculator"
+  description="Learn about SplitWhat, a privacy-first, account-free alternative to Splitwise. Built to help people split bills online without tracking or database storage."
+  keywords="about splitwhat, splitwise alternatives, split bill online, local first bill splitter"
+>
+  <!-- Background Mesh Gradient -->
+  <div class="mesh-gradient-bg"></div>
+
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="text-center space-y-4 mb-16">
+      <p class="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Our Story</p>
+      <h1 class="text-4xl font-extrabold tracking-tight text-ink sm:text-5xl leading-none">
+        About <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">SplitWhat</span>
+      </h1>
+      <p class="text-base text-body max-w-2xl mx-auto">
+        A local-first, privacy-respecting split bill calculator designed to help you settle group costs instantly without the hassle of accounts, ads, or tracking.
+      </p>
+    </div>
+
+    <div class="space-y-12">
+      <!-- Section 1: The Problem -->
+      <div class="vercel-card bg-canvas-card/60 backdrop-blur-xl border border-hairline p-8 rounded-3xl">
+        <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+          <span class="text-xl">⚠️</span> Why We Built It
+        </h2>
+        <p class="text-sm text-body leading-relaxed">
+          Sharing expenses is a normal part of life—whether you are splitting a restaurant bill, going on a trip with friends, or sharing rent with roommates. However, popular solutions like Splitwise have increasingly restricted their free tiers, introduced annoying ads, and required every member of a group to create an account and log in. 
+        </p>
+        <p class="text-sm text-body leading-relaxed mt-4">
+          We believed there had to be a better way: a tool that is fast, entirely free, works offline, and requires absolutely no registration. SplitWhat is our answer.
+        </p>
+      </div>
+
+      <!-- Section 2: How it works technically -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="vercel-card bg-canvas-card/60 backdrop-blur-xl border border-hairline p-8 rounded-3xl">
+          <h3 class="text-lg font-bold text-ink mb-3 flex items-center gap-2">
+            <span class="text-lg">🔒</span> Privacy First
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            SplitWhat does not use databases, tracking servers, or log accounts. Every single calculation runs directly inside your browser. Your data is stored locally in your browser's localStorage. When you share a link, the entire group state is compressed into a URL hash using the `lz-string` library. No one else has access to your expense details.
+          </p>
+        </div>
+
+        <div class="vercel-card bg-canvas-card/60 backdrop-blur-xl border border-hairline p-8 rounded-3xl">
+          <h3 class="text-lg font-bold text-ink mb-3 flex items-center gap-2">
+            <span class="text-lg">⚡</span> Instant & Free
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            Because there is no backend server roundtrip or authentication flow, using SplitWhat is blazingly fast. It loads in milliseconds, functions entirely offline, and settles payments optimally with the fewest possible transactions. And it will remain 100% free with no ads, premium tiers, or limits.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 3: The Tech Stack -->
+      <div class="vercel-card bg-canvas-card/60 backdrop-blur-xl border border-hairline p-8 rounded-3xl">
+        <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+          <span class="text-xl">🛠️</span> Built with Modern Web Tech
+        </h2>
+        <p class="text-sm text-body leading-relaxed mb-6">
+          SplitWhat is built using modern web development practices to ensure performance, responsiveness, and accessibility:
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+          <div class="p-4 bg-canvas-soft/40 border border-hairline rounded-xl">
+            <div class="text-lg font-bold text-indigo-500">Astro 7</div>
+            <div class="text-[10px] font-mono text-mute mt-1">Multi-page Architecture</div>
+          </div>
+          <div class="p-4 bg-canvas-soft/40 border border-hairline rounded-xl">
+            <div class="text-lg font-bold text-indigo-500">Tailwind 4</div>
+            <div class="text-[10px] font-mono text-mute mt-1">Utility CSS Framework</div>
+          </div>
+          <div class="p-4 bg-canvas-soft/40 border border-hairline rounded-xl">
+            <div class="text-lg font-bold text-indigo-500">LZ-String</div>
+            <div class="text-[10px] font-mono text-mute mt-1">URL Compression</div>
+          </div>
+          <div class="p-4 bg-canvas-soft/40 border border-hairline rounded-xl">
+            <div class="text-lg font-bold text-indigo-500">jsPDF / QR</div>
+            <div class="text-[10px] font-mono text-mute mt-1">Local Exporters</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

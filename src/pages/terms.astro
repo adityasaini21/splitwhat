@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Terms & Conditions — SplitWhat Online Calculator"
+  description="Terms of service for SplitWhat. Access our free, local-first bill splitter without registration. Completely client-side tool provided as-is."
+  keywords="terms of service, split bill online calculator, free split bill calculator, splitwise login alternatives"
+>
+  <!-- Background Mesh Gradient -->
+  <div class="mesh-gradient-bg"></div>
+
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="text-center space-y-4 mb-16">
+      <p class="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Rules & Disclaimers</p>
+      <h1 class="text-4xl font-extrabold tracking-tight text-ink sm:text-5xl leading-none">
+        Terms & Conditions
+      </h1>
+      <p class="text-base text-body max-w-2xl mx-auto">
+        Please read these terms carefully before using the SplitWhat split bill calculator.
+      </p>
+    </div>
+
+    <div class="vercel-card bg-canvas-card/60 backdrop-blur-xl border border-hairline p-8 rounded-3xl space-y-8 text-sm text-body leading-relaxed">
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">1. Acceptance of Terms</h2>
+        <p>
+          By accessing or using the SplitWhat online application, you agree to be bound by these Terms & Conditions. If you do not agree to these terms, please do not use the application.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">2. Description of Service</h2>
+        <p>
+          SplitWhat is a client-side **split bill online calculator** helper tool. We provide automated calculations to divide debts and group balances. Since all logic runs locally, we do not guarantee uptime, and the service is provided 100% free of charge.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">3. Data Persistence & Room for Error</h2>
+        <p>
+          Because your group data is stored inside your browser's <code>localStorage</code>, clearing browser history, cache, or using private browsing modes (Incognito) will delete all local progress. We do not provide backup utilities beyond the exportable URL links. 
+        </p>
+        <p class="mt-3">
+          While we make every effort to ensure the mathematical accuracy of our greedy debt-simplification algorithm, we are not liable for any financial calculations, disputes, errors, or losses arising from your use of this tool.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">4. Shared Links Responsibility</h2>
+        <p>
+          The "Share Group Link" creates a URL containing the raw, compressed state of your group. Any third party who obtains this URL can see the group name, currency, member names, and expense descriptions. You are solely responsible for keeping these URLs confidential or choosing whom to share them with.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">5. Disclaimer of Warranties</h2>
+        <p class="italic text-ink font-semibold">
+          THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>

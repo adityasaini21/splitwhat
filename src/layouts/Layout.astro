@@ -271,12 +271,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://splitwha
             </div>
           </div>
         </div>
-        <div class="mt-12 border-t border-hairline pt-8 flex items-center justify-between">
-          <p class="text-xs text-mute">&copy; {new Date().getFullYear()} SplitWhat. All rights reserved.</p>
-          <div class="flex gap-4">
-            <a href="/" class="text-xs text-mute hover:text-ink font-mono">100% Client-Side</a>
-            <span class="text-xs text-mute font-mono">•</span>
-            <a href="/app" class="text-xs text-mute hover:text-ink font-mono">No Login Required</a>
+        <div class="mt-12 border-t border-hairline pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-center md:text-left">
+            <p class="text-xs text-mute">&copy; {new Date().getFullYear()} SplitWhat. All rights reserved.</p>
+            <div class="flex gap-3 text-xs text-mute font-mono">
+              <a href="/" class="hover:text-ink">100% Client-Side</a>
+              <span>•</span>
+              <a href="/app" class="hover:text-ink">No Login Required</a>
+            </div>
+          </div>
+          <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="/about" class="text-xs text-body hover:text-ink">About Us</a>
+            <a href="/contact" class="text-xs text-body hover:text-ink">Contact Us</a>
+            <a href="/privacy" class="text-xs text-body hover:text-ink">Privacy Policy</a>
+            <a href="/terms" class="text-xs text-body hover:text-ink">Terms & Conditions</a>
           </div>
         </div>
       </div>

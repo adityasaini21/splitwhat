@@ -821,4 +821,53 @@ import Layout from '../layouts/Layout.astro';
     // Initial render
     renderSimulator();
   </script>
+
+  <script type="application/ld+json" is:inline>
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Where is my split bill data stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "<p>All calculations and expense details are stored entirely in your browser's local storage. SplitWhat is a local-first split bill calculator that does not use backend databases or external servers, keeping your financial details completely private.</p>"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does sharing work without a database or splitwise login?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "<p>We compress the entire group state (members, expenses, and configuration) into a compact base64 string using the lz-string algorithm and append it as a URL query parameter. Your friends can open the shared link and load the data instantly without creating an account or logging in.</p>"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this split bill calculator free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "<p>Yes, SplitWhat is a 100% free split bill calculator app. There are no premium tiers, no daily limit on adding expenses, and absolutely no ads.</p>"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this online split bill calculator offline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "<p>Yes, since the app is built using client-side technologies, it is fully offline-capable. You can add expenses and calculate settlements without an active internet connection, making it perfect for remote group travel.</p>"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there other free splitwise alternatives that don't require registration?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "<p>SplitWhat is one of the premier splitwise alternatives designed to be account-free. It allows you to split bills online, calculate optimal settlements, and export to PDF/QR without requiring user registration or email verification.</p>"
+          }
+        }
+      ]
+    }
+  </script>
 </Layout>

@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Privacy Policy — SplitWhat Free Bill Splitter"
+  description="Read our privacy policy. SplitWhat is a local-first split bill calculator. We collect zero user data, store nothing on servers, and use no tracking cookies."
+  keywords="privacy policy, split bill payment, splitwise alternatives, no tracking bill splitter"
+>
+  <!-- Background Mesh Gradient -->
+  <div class="mesh-gradient-bg"></div>
+
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="text-center space-y-4 mb-16">
+      <p class="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">Security & Trust</p>
+      <h1 class="text-4xl font-extrabold tracking-tight text-ink sm:text-5xl leading-none">
+        Privacy Policy
+      </h1>
+      <p class="text-base text-body max-w-2xl mx-auto">
+        Effective date: July 9, 2026. SplitWhat is built with a single core principle: your private financial activities should remain private.
+      </p>
+    </div>
+
+    <div class="vercel-card bg-canvas-card/60 backdrop-blur-xl border border-hairline p-8 rounded-3xl space-y-8 text-sm text-body leading-relaxed">
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">1. Zero Server-Side Storage</h2>
+        <p>
+          SplitWhat operates entirely on the client side. We do not own, operate, or maintain any databases or servers that save your group configuration, member lists, expense descriptions, transaction amounts, or settlement structures. Every single byte of data stays inside your browser.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">2. Local Storage</h2>
+        <p>
+          We use browser <code>localStorage</code> to store your group state on your own device so you don't lose progress when reloading the page or closing the tab. This data never leaves your device unless you choose to share a group link. You can easily clear this data at any time by clearing your browser's site settings.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">3. How Stateless Sharing Works</h2>
+        <p>
+          When you click "Share Group Link", SplitWhat compresses the local group data into a short base64 string using the <code>lz-string</code> compression library and appends it to the URL query parameter (as a hash). 
+        </p>
+        <p class="mt-3">
+          When your friends visit this link, their browser reads, decompresses, and renders the data locally. This sharing mechanism is entirely stateless—no database is queried or updated during this process.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">4. Cookies and Analytics</h2>
+        <p>
+          SplitWhat does not use tracking cookies, advertiser trackers, or marketing pixels. We do not track your IP address, geographical location, browser user-agent, or device ID. We have no ads, ensuring a clean and tracking-free experience.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">5. Third-Party Links</h2>
+        <p>
+          Our application may generate links or codes facilitating a <strong>split bill payment</strong> via external services (like Venmo, PayPal, or local UPI applications). We do not control these services, and their privacy terms govern any payments you make.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-ink mb-3">6. Changes to this Policy</h2>
+        <p>
+          Because we do not store any email addresses or communication details, we cannot notify users of updates directly. Any changes to this policy will be posted on this page. We encourage you to review it periodically.
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>
