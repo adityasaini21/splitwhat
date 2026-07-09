@@ -298,12 +298,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://splitwha
             return;
           }
           
-          const x = e.clientX;
-          const y = e.clientY;
+          const rect = toggleBtn.getBoundingClientRect();
+          const x = e.clientX || (rect.left + rect.width / 2);
+          const y = e.clientY || (rect.top + rect.height / 2);
           const endRadius = Math.hypot(
             Math.max(x, window.innerWidth - x),
             Math.max(y, window.innerHeight - y)
           );
+          
+          // Disable CSS transitions during snapshot capture to prevent double animation / stuttering
+          document.documentElement.classList.add('no-transitions');
           
           const transition = document.startViewTransition(() => {
             const newDark = document.documentElement.classList.toggle('dark');
@@ -320,11 +324,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://splitwha
                 clipPath: clipPath,
               },
               {
-                duration: 450,
+                duration: 400, // Faster transition for snappier feel
                 easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
                 pseudoElement: '::view-transition-new(root)',
               }
             );
+          });
+
+          // Re-enable transitions after the animation completes
+          transition.finished.then(() => {
+            document.documentElement.classList.remove('no-transitions');
+          }).catch(() => {
+            document.documentElement.classList.remove('no-transitions');
           });
         });
       }
